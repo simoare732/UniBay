@@ -1,6 +1,6 @@
 /* Color personalization for button search */
 /* #ef580f is the color of the I of the logo */
-/* #04484d is the color of the rest of the logo */
+/* #052F4B is the color of the rest of the logo */
 .custom-button{
     border-color:#ef580f;
     background-color: white;
@@ -14,12 +14,12 @@
 
 /* Color personalization for button register */
 .custom-button-reg{
-    border-color: #04484d;
+    border-color: #052F4B;
     background-color: white;
-    color: #04484d;
+    color: #052F4B;
 }
 
 .custom-button-reg:hover{
-    background-color: #04484d;
+    background-color: #052F4B;
     color: white;
 }
