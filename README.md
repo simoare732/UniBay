@@ -22,3 +22,4 @@ Ora all'interno di questo ambiente si installa l'applicazione crispy-forms e boo
 pip install django-crispy-forms
 pip install crispy-bootstrap5
 ```
+Rifai il la modalità per registrarsi, rivedi tutta l'app users e ricorda il sito uiverse.io
