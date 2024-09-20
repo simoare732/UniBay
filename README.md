@@ -12,8 +12,13 @@ Dopo aver clonato il progetto
 ```powershell
 git clone https://github.com/simoare732/ecommerce_django.git
 ```
-Creiamo un ambiente virtuale tramite il comando e apriamo la subshell 
+Si crea un ambiente virtuale tramite il comando e si apre la subshell 
 ```powershell
 pipenv install django
 pipenv shell
+```
+Ora all'interno di questo ambiente si installa l'applicazione crispy-forms e bootstrap5 per l'estetica
+```powershell
+pip install django-crispy-forms
+pip install crispy-bootstrap5
 ```
