@@ -1,19 +1,23 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.contrib.auth.models import User
 
-#Class Profile that allows to create a profile for each user
-class Profile(models.Model):
-    USER_TYPE_CHOICES = (
-        ('CLIENTE', 'Cliente'),
-        ('VENDITORE', 'Venditore'),
-    )
+class User(AbstractUser):
+    is_registered_user = models.BooleanField(default=False)
+    is_seller = models.BooleanField(default=False)
 
+class Registered_User(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='CLIENTE')
-    nome = models.CharField(max_length=50, blank=True)
-    cognome = models.CharField(max_length=50, blank=True)
-    partita_iva = models.CharField(max_length=20, blank=True)
-    email_aziendale = models.EmailField(blank=True)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
 
     def __str__(self):
-        return f'{self.user.username} Profile'
+        return self.user
+
+class Seller(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    PIVA = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.user

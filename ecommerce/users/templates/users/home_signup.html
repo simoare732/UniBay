@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/sign.css' %}">
+{% endblock %}
+
+
+{% block title %} Home Signup {% endblock %}
+
+{% block content %}
+    <div class="login-wrapper">
+        Hai già un account? <a href="">Accedi</a>
+    </div>
+
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center py-2">
+            <!-- Logo Section -->
+            <div class="logo">
+                <a href="{% url 'pages:home_page' %}">
+                    <img src="{% static 'imgs/logo.png' %}" alt="Logo" width="150" height="30">
+                </a>
+            </div>
+        </div>
+
+        <div class="title">Registra un nuovo account</div>
+        <div class="subtitle">Seleziona il tipo di account che vuoi creare</div>
+
+        <div class="btn-group">
+            <a href="#" class="btn buttons">Utente</a>
+            <a href="#" class="btn buttons">Venditore</a>
+        </div>
+    </div>
+
+{% endblock %}

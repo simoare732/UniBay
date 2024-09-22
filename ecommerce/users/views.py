@@ -1,15 +1,7 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .forms import UserRegisterForm
+from django.shortcuts import render
+from django.views.generic import CreateView
 
-def register(request):
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Account creato per {username}!')
-            return redirect('login')
-    else:
-        form = UserRegisterForm()
-    return render(request, 'users/register.html', {'form': form, 'title': 'Registrazione Utente'})
+
+def home_signup(request):
+    return render(request, 'users/home_signup.html')
+
