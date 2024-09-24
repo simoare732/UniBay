@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/sign.css' %}">
+{% endblock %}
+
+{% block title %} Logout {% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Logout</div>
+                <div class="card-body">
+                    <p>Sei stato disconnesso con successo.</p>
+                    <a href="{% url 'pages:home_page' %}" class="btn buttons">Torna alla home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

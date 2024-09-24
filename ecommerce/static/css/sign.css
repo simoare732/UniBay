@@ -57,3 +57,19 @@
 .buttons:hover{
     background-color: black !important;
 }
+
+
+h3 {
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control{
+    height: 40px;
+    border-radius: 0px;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+}

@@ -27,8 +27,8 @@
         <div class="subtitle">Seleziona il tipo di account che vuoi creare</div>
 
         <div class="btn-group">
-            <a href="#" class="btn buttons">Utente</a>
-            <a href="#" class="btn buttons">Venditore</a>
+            <a href="{% url 'users:user_signup' %}" class="btn buttons">Utente</a>
+            <a href="{% url 'users:seller_signup' %}" class="btn buttons">Venditore</a>
         </div>
     </div>
 

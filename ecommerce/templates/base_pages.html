@@ -45,10 +45,21 @@
                 </div>
 
                 <!-- Buttons Accedi and Registrati on the right -->
-                <div class="d-flex">
-                    <a class="btn custom-button me-2" href="">Accedi</a>
-                    <a class="btn custom-button-reg" href="{% url 'users:home_signup' %}">Registrati</a>
-                </div>
+                {% if user.is_authenticated and login_ok %}
+                    <div class="d-flex">
+                        <a class="btn custom-button me-2" href="">Profilo</a>
+                        <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn custom-button-reg">Logout</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="d-flex">
+                        <a class="btn custom-button me-2" href="{% url 'users:login' %}">Accedi</a>
+                        <a class="btn custom-button-reg" href="{% url 'users:home_signup' %}">Registrati</a>
+                    </div>
+                {% endif %}
+
             </div>
         </nav>
     {% endblock %}

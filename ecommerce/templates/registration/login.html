@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/sign.css' %}">
+{% endblock %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center align-items-center py-2">
+        <!-- Logo Section -->
+        <div class="logo">
+            <a href="{% url 'pages:home_page' %}">
+                <img src="{% static 'imgs/logo.png' %}" alt="Logo" width="150" height="30">
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-2">
+        <div class="row justify-content-center">
+            <div class="col-md-6"> <!-- Definisce la larghezza del form -->
+                <h3 class="text-center">Accedi</h3>
+
+                <form method="post" class="d-flex flex-column align-items-center">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input type="submit" class="btn buttons mt-3" value="Log in">
+                </form>
+                <p class="text-center py-4">Prima volta su UniBay? <a href="{% url 'users:home_signup' %}">Crea un account</a></p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

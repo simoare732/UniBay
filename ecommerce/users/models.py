@@ -11,7 +11,7 @@ class Registered_User(models.Model):
     phone = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.user
+        return self.user.username
 
 class Seller(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
