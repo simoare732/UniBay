@@ -47,7 +47,11 @@
                 <!-- Buttons Accedi and Registrati on the right -->
                 {% if user.is_authenticated and login_ok %}
                     <div class="d-flex">
-                        <a class="btn custom-button me-2" href="">Profilo</a>
+                        {% if user.is_seller %}
+                            <a class="btn custom-button me-2" href="{% url 'users:profile_seller' user.seller.pk%}">Profilo</a>
+                        {% else %}
+                            <a class="btn custom-button me-2" href="{% url 'users:profile_user' user.registered_user.pk%}">Profilo</a>
+                        {% endif %}
                         <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn custom-button-reg">Logout</button>

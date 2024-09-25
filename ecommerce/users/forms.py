@@ -16,20 +16,23 @@ class User_Signup_Form(UserCreationForm):
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '1234567890'}),
         error_messages = {'required': 'Questo campo è obbligatorio.'},
     )
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
+        label='Nome utente',
+    )
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
+        label='Password',
+    )
+
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}),
+        label='Conferma Password',
+    )
 
     class Meta:
         model = User
         fields = ['email', 'username',  'password1', 'password2', 'phone']
-        widget = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
-            'password1': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
-            'password2': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}),
-        }
-        labels = {
-            'username': 'Nome utente',  # Etichetta semplificata
-            'password1': 'Password',
-            'password2': 'Conferma Password'
-        }
 
     # This decoration ensure that the save method is atomic, meaning that if an error occurs during the save process,
     # all the transaction is rolled back.
@@ -64,20 +67,23 @@ class Seller_Signup_Form(UserCreationForm):
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '12345678901'}),
         error_messages={'required': 'Questo campo è obbligatorio.'},
     )
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
+        label='Nome utente',
+    )
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
+        label='Password',
+    )
+
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}),
+        label='Conferma Password',
+    )
 
     class Meta:
         model = User
         fields = ['email', 'PIVA', 'username',  'password1', 'password2', 'phone']
-        widget = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
-            'password1': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
-            'password2': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}),
-        }
-        labels = {
-            'username': 'Nome utente',  # Etichetta semplificata
-            'password1': 'Password',
-            'password2': 'Conferma Password'
-        }
 
     @transaction.atomic
     def save(self, commit=True):

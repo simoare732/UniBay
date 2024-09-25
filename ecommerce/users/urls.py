@@ -10,4 +10,6 @@ urlpatterns = [
     path('sellersignup/', views.Seller_Signup_View.as_view(), name='seller_signup'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('profile/user/<pk>', views.detail_profile_user.as_view(), name='profile_user'),
+    path('profile/seller/<pk>', views.detail_profile_seller.as_view(), name='profile_seller'),
 ]

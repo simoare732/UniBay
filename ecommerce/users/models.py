@@ -20,4 +20,4 @@ class Seller(models.Model):
     PIVA = models.CharField(max_length=15)
 
     def __str__(self):
-        return self.user
+        return self.user.username
