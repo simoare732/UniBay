@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %} Delete product {% endblock %}
+
+{% block content %}
+    {% include 'head.html' %}
+    <div class="container mt-5">
+        <h2>Riepilogo</h2>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.title }}</h5>
+                <p class="card-text">{{ product.description }}</p>
+                <p class="card-text"><strong>Prezzo:</strong> {{ product.price }}</p>
+                <p class="card-text"><strong>Quantità:</strong> {{ product.quantity }}</p>
+                <p class="card-text"><strong>Categorie:</strong>
+                    {% for category in product.categories.all %}
+                        <span class="badge bg-secondary">{{ category }}</span>
+                    {% endfor %}
+                <div class="product-images">
+                    {% if product.image1 %}
+                        <img src="{{ product.image1.url }}" alt="Product Image 1" class="img-thumbnail" style="width: 100px; height: 100px;">
+                    {% endif %}
+                    {% if product.image2 %}
+                        <img src="{{ product.image2.url }}" alt="Product Image 2" class="img-thumbnail" style="width: 100px; height: 100px;">
+                    {% endif %}
+                    {% if product.image3 %}
+                        <img src="{{ product.image3.url }}" alt="Product Image 3" class="img-thumbnail" style="width: 100px; height: 100px;">
+                    {% endif %}
+                    {% if product.image4 %}
+                        <img src="{{ product.image4.url }}" alt="Product Image 4" class="img-thumbnail" style="width: 100px; height: 100px;">
+                    {% endif %}
+                    {% if product.image5 %}
+                        <img src="{{ product.image5.url }}" alt="Product Image 5" class="img-thumbnail" style="width: 100px; height: 100px;">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Si elimina</button>
+                <a href="{% url 'listings:list_products' %}" class="btn btn-secondary">Torna indietro</a>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}

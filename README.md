@@ -22,7 +22,11 @@ Ora all'interno di questo ambiente si installa l'applicazione crispy-forms e boo
 pip install django-crispy-forms
 pip install crispy-bootstrap5
 ```
-Per supportare le immagini dei prodootti si installa pillow
+Per supportare le immagini dei prodotti si installa pillow
 ```powershell
 pip install Pillow
+```
+Per un'interfaccia più moderna per le categorie si installa django-mptt
+```powershell
+pip install django-select2
 ```

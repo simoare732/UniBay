@@ -10,8 +10,9 @@
 
 {% block content %}
     <div class="login-wrapper">
-        Hai già un account? <a href="">Accedi</a>
+        Hai già un account? <a href="{% url 'users:login' %}">Accedi</a>
     </div>
+
 
     <div class="container">
         <div class="d-flex justify-content-between align-items-center py-2">

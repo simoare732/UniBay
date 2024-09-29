@@ -15,7 +15,6 @@ def product_image_path(instance, filename):
 
 class Product(models.Model):
 
-
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
 
@@ -30,6 +29,10 @@ class Product(models.Model):
 
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
+
+    categories = models.ManyToManyField('Category', related_name='products')
+
+    date = models.DateTimeField(auto_now_add=True, editable=False, null=True)
 
     def save(self, *args, **kwargs):
         # Before save istance without pk
@@ -67,3 +70,14 @@ class Product(models.Model):
     def increase_quantity(self, n):
         self.quantity += n
         self.save()
+
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'Categories'

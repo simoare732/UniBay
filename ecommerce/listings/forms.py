@@ -1,6 +1,5 @@
 from django import forms
-from django.db import transaction
-from .models import Product
+from .models import Product, Category
 
 class product_create_form(forms.ModelForm):
     title = forms.CharField(
@@ -28,7 +27,39 @@ class product_create_form(forms.ModelForm):
         widget=forms.FileInput(attrs={'class': 'form-control-file'}),
     )
 
+    image2 = forms.ImageField(
+        label='Immagine 2',
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'form-control-file'}),
+    )
+
+    image3 = forms.ImageField(
+        label='Immagine 3',
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'form-control-file'}),
+    )
+
+    image4 = forms.ImageField(
+        label='Immagine 4',
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'form-control-file'}),
+    )
+
+    image5 = forms.ImageField(
+        label='Immagine 5',
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'form-control-file'}),
+    )
+
+    categories = forms.ModelMultipleChoiceField(
+        queryset=Category.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=True,
+        label='Categorie'
+    )
+
+
     class Meta:
         model = Product
-        fields = ['title', 'description', 'image1', 'price', 'quantity']
+        fields = ['title', 'description', 'image1', 'image2', 'image3', 'image4', 'image5', 'price', 'quantity', 'categories']
 

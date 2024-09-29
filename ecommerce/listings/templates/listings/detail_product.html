@@ -1,0 +1,29 @@
+{% extends 'base_pages.html' %}
+
+{% block title %} Product detail {% endblock %}
+
+{% block content %}
+    <div class="product-detail">
+        <div class="product-images">
+            <img id="main-image" src="{{ product.images.first.url }}" alt="{{ product.title }}">
+            <div class="thumbnail-images">
+                {% for image in product.images.all %}
+                    <img class="thumbnail" src="{{ image.url }}" alt="{{ product.title }}" onclick="switchImage('{{ image.url }}')">
+                {% endfor %}
+            </div>
+        </div>
+        <div class="product-info">
+            <h1>{{ product.title }}</h1>
+            <p class="price">{{ product.price }}</p>
+            <div class="description">
+                {{ product.description }}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchImage(url) {
+            document.getElementById('main-image').src = url;
+        }
+    </script>
+{% endblock %}
