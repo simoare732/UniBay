@@ -1,17 +1,31 @@
-{% extends 'base.html' %}
+{% extends 'base_pages.html' %}
 
 {% block title %} Seller profile {% endblock %}
 
 {% block content %}
     <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h2>Seller profile</h2>
-                <p>Username: {{ object.user.username }}</p>
-                <p>Email: {{ object.email }}</p>
-                <p>Phone number: {{ object.phone }}</p>
-                <p>P.IVA: {{ object.PIVA }}</p>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="bg-light p-3 my-3 text-center">
+                    <h2>{{ object.user.username }}</h2>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Info personali</h5> <br>
+                        <p class="card-text"><strong>Email:</strong> {{ object.email }}</p>
+                        <p class="card-text"><strong>Phone number:</strong> {{ object.phone }}</p>
+                        <p class="card-text"><strong>P.IVA:</strong> {{ object.PIVA }}</p>
+                        <p class="card-text"><strong>Iscritto in data:</strong> {{ object.user.date_joined }}</p>
+                        <a href="{% url 'users:update_profile_seller' object.pk %}" class="btn btn-light">Modifica</a>
+                    </div>
+                </div>
+                <div class="my-3 d-flex flex-column align-items-start">
+                    <a href="#" class="btn custom-button mb-2">Info sui prodotti</a>
+                    <a href="{% url 'listings:create_product' %}" class="btn custom-button-reg">Aggiungi prodotto</a>
+                </div>
             </div>
         </div>
     </div>
+
+    {% include 'footer.html' %}
 {% endblock %}

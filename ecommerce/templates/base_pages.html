@@ -20,7 +20,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <!-- Logo -->
-                <a class="navbar-brand" href="">
+                <a class="navbar-brand" href="{% url 'pages:home_page' %}">
                     <img src="{% static 'imgs/logo.png' %}" alt="Logo" width="150" height="30" class="d-inline-block align-top">
                 </a>
 
@@ -45,12 +45,14 @@
                 </div>
 
                 <!-- Buttons Accedi and Registrati on the right -->
-                {% if user.is_authenticated and login_ok %}
+                {% if user.is_authenticated %}
                     <div class="d-flex">
                         {% if user.is_seller %}
                             <a class="btn custom-button me-2" href="{% url 'users:profile_seller' user.seller.pk%}">Profilo</a>
-                        {% else %}
+                        {% elif user.is_registered_user %}
                             <a class="btn custom-button me-2" href="{% url 'users:profile_user' user.registered_user.pk%}">Profilo</a>
+                        {% else %}
+                            <a class="btn custom-button me-2" href="{% url 'users:profile_admin' user.pk%}">Profilo</a>
                         {% endif %}
                         <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
                             {% csrf_token %}
