@@ -3,20 +3,54 @@
 {% block title %} Product detail {% endblock %}
 
 {% block content %}
-    <div class="product-detail">
-        <div class="product-images">
-            <img id="main-image" src="{{ product.images.first.url }}" alt="{{ product.title }}">
-            <div class="thumbnail-images">
-                {% for image in product.images.all %}
-                    <img class="thumbnail" src="{{ image.url }}" alt="{{ product.title }}" onclick="switchImage('{{ image.url }}')">
-                {% endfor %}
+    <div class="container product-detail">
+        <div class="row">
+            <div class="col-md-1">
+                <div class="row">
+                    <div class="col-9 mb-2">
+                        <img class="img-thumbnail" src="{{ product.image1.url }}" alt="{{ product.title }}" onclick="switchImage('{{ product.image1.url }}')">
+                    </div>
+                    {% if product.image2 %}
+                    <div class="col-9 mb-2">
+                        <img class="img-thumbnail" src="{{ product.image2.url }}" alt="{{ product.title }}" onclick="switchImage('{{ product.image2.url }}')">
+                    </div>
+                    {% endif %}
+                    {% if product.image3 %}
+                    <div class="col-9 mb-2">
+                        <img class="img-thumbnail" src="{{ product.image3.url }}" alt="{{ product.title }}" onclick="switchImage('{{ product.image3.url }}')">
+                    </div>
+                    {% endif %}
+                    {% if product.image4 %}
+                    <div class="col-9 mb-2">
+                        <img class="img-thumbnail" src="{{ product.image4.url }}" alt="{{ product.title }}" onclick="switchImage('{{ product.image4.url }}')">
+                    </div>
+                    {% endif %}
+                    {% if product.image5 %}
+                    <div class="col-9 mb-2">
+                        <img class="img-thumbnail" src="{{ product.image5.url }}" alt="{{ product.title }}" onclick="switchImage('{{ product.image5.url }}')">
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-        <div class="product-info">
-            <h1>{{ product.title }}</h1>
-            <p class="price">{{ product.price }}</p>
-            <div class="description">
-                {{ product.description }}
+            <div class="col-md-6 me-4">
+                <img id="main-image" src="{{ product.image1.url }}" alt="{{ product.title }}" class="img-fluid mb-3">
+            </div>
+
+            <div class="col-md-4 d-flex flex-column align-items-start ms-4">
+                <h1 class="mb-2">{{ product.title }}</h1>
+                <hr class="mb-3"> <!-- Linea di separazione -->
+                <h3 class="price mt-3">EUR {{ product.price }}</h3>
+                <div class="d-flex align-items-center mt-3">
+                    <label for="quantity" class="form-label mb-0 me-2">Quantità:</label>
+                    <input id="quantity" type="number" class="form-control" min="1" value="1" style="width: 70px;">
+                    <small class="text-muted ms-2">Disponibile: {{ product.quantity }}</small>
+                </div>
+
+            </div>
+
+            <div class="description my-5">
+                <h3>Descrizione</h3>
+                <p>{{ product.description }}</p>
             </div>
         </div>
     </div>
