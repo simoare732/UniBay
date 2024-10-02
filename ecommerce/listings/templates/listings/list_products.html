@@ -59,8 +59,9 @@
                                     {% endfor %}
                                     <p class="card-text">Price: {{ product.price }}€</p>
                                     <p class="card-text">Quantity: {{ product.quantity }}</p>
-                                    <a href="#" class="btn btn-primary">Modifica</a>
+                                    <a href="{% url 'listings:update_product' product.pk %}" class="btn btn-primary">Modifica</a>
                                     <a href="{% url 'listings:delete_product' product.pk %}" class="btn btn-danger">Elimina</a>
+                                    <a href="{% url 'listings:detail_product' product.pk %}" class="btn btn-success">Vedi sullo store</a>
                                 </div>
                             </div>
                         </div>
