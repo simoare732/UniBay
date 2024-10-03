@@ -5,6 +5,7 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 {% endblock %}
 
 {% block content %}
@@ -52,9 +53,13 @@
                 </div>
 
                 <div class="d-flex flex-column w-100 mt-3">
-                    <button class="btn button-cart mb-2 w-100">Button 1</button>
-                    <button class="btn btn-secondary mb-2 w-100">Button 2</button>
-                    <button class="btn btn-success w-100">Button 3</button>
+                    <button class="btn button-cart mb-2 w-100">Compra subito</button>
+                    <button class="btn button-prefer mb-2 w-100">
+                        <i class="fas fa-shopping-cart"></i> Aggiungi al carrello
+                    </button>
+                    <button class="btn button-prefer w-100" id="heart-button" onclick="toggleFavorite()">
+                        <i class="far fa-heart" id="heart-icon"></i> Aggiungi ai preferiti
+                    </button>
                 </div>
 
             </div>
@@ -71,5 +76,26 @@
         function switchImage(url) {
             document.getElementById('main-image').src = url;
         }
+
+        function toggleFavorite() {
+            const heartIcon = document.getElementById('heart-icon');
+            if (heartIcon.classList.contains("far")) {
+                heartIcon.classList.remove("far");
+                heartIcon.classList.add("fas"); // Filled heart
+            } else {
+                heartIcon.classList.remove("fas");
+                heartIcon.classList.add("far"); // Outlined heart
+            }
+            const isFavorite = heartIcon.classList.toggle('favorite');
+            localStorage.setItem('isFavorite', isFavorite);
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const heartIcon = document.getElementById('heart-icon');
+            const isFavorite = localStorage.getItem('isFavorite') === 'true';
+            if (isFavorite) {
+                heartIcon.classList.add('favorite');
+            }
+        });
     </script>
 {% endblock %}

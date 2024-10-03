@@ -1,5 +1,32 @@
+.btn:active {
+    transform: translateY(1px); /* Move button slightly down */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Reduce the shadow when pressed */
+}
+
 .button-cart {
     background-color: #ef580f !important;
     border-color: #ef580f !important;
     color: white !important;
+    border-radius: 15px !important;
 }
+
+.button-cart:hover {
+    background-color: #d8510e !important;
+    color: white !important;
+}
+
+.button-prefer{
+    border-color: #052F4B !important;
+    color: #052F4B !important;
+    border-radius: 15px !important;
+}
+
+.button-prefer:hover {
+    background-color: #e6e6e6 !important;
+}
+
+/* Aggiungi questo blocco alla fine del file */
+#heart-icon {
+    color: #052F4B !important;
+}
+
