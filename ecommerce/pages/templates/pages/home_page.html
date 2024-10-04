@@ -1,7 +1,52 @@
 {% extends 'base_pages.html' %}
+{% load static %}
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}
+
 {% block content %}
+
+    <div class="text-center">
+        <h1>Benvenuto su Unibay</h1>
+        <h5>Sito di e-commerce per adulti e bambini</h5>
+    </div>
+    <hr>
+
+    <div id="carouselIndicators" class="carousel slide border-margin" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner" style="border-radius: 30px">
+            <div class="carousel-item active">
+                <a href="#"><img src="{% static 'imgs/cancelleria.jpeg' %}" class="d-block w-100" alt="cancelleria"></a>
+            </div>
+            <div class="carousel-item">
+                <a href="#"><img src="{% static 'imgs/PC.jpeg' %}" class="d-block w-100" alt="PC"></a>
+            </div>
+            <div class="carousel-item">
+                <a href="#"><img src="{% static 'imgs/auto.jpeg' %}" class="d-block w-100" alt="auto"></a>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <h2 class="mt-5 border-margin">Se hai da vendere</h2>
+
+    <div class="mt-4 text-center border-margin">
+        <a href="{% url 'users:seller_signup' %}" class="btn button-sell btn-lg w-100">Vendi su UniBay</a>
+    </div>
+
     {% include 'footer.html' %}
 {% endblock %}
