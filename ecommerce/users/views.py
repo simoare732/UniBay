@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, UpdateView
 from django.contrib.auth import login
-from .models import *
 from .forms import *
+from listings.models import Category
 
 
 def home_signup(request):
@@ -48,13 +48,28 @@ class detail_profile_user(DetailView):
     model = Registered_User
     template_name = 'users/profile_user.html'
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['categories'] = Category.objects.all()
+        return ctx
+
 class detail_profile_seller(DetailView):
     model = Seller
     template_name = 'users/profile_seller.html'
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['categories'] = Category.objects.all()
+        return ctx
+
 class detail_profile_admin(DetailView):
     model = User
     template_name = 'users/profile_admin.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['categories'] = Category.objects.all()
+        return ctx
 
 
 class update_profile_user(UpdateView):

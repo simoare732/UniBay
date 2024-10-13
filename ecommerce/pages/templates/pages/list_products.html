@@ -1,19 +1,40 @@
 {% extends 'base_pages.html' %}
+{% load static %}
 
 {% block title %} List of products {% endblock %}
 
-{% block content %}
-    <h1>Lista dei prodotti</h1>
-    {% for product in filter.qs %}
-        <div class="product">
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.description }}</p>
-            <p>Prezzo: {{ product.price }}</p>
-        </div>
-    {% empty %}
-        <p>Nessun prodotto trovato.</p>
-    {% endfor %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}
 
+{% block content %}
+    <div class="container mt-4">
+        <h2>Risultati della ricerca</h2>
+        <h5>{{ products.count }} risultati</h5>
+
+            {% for product in products %}
+                <div class="col-md-5 row mb-3">
+                    <div class="col-md-3">
+                        <!-- Target blank is used to open a new page when link is clicked -->
+                        <div class="image-container" style="border: 1px solid #ddd;">
+                            <a href="{% url 'listings:detail_product' product.pk %}" target="_blank">
+                                <img src="{{ product.image1.url }}" alt="{{ product.name }}" class="card-img-top product-image">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-9"> <!-- Dimensione del titolo e altre informazioni -->
+                        <h5 class="product-title">
+                            <a href="{% url 'listings:detail_product' product.pk %}" style="text-decoration: none; color: inherit;" target="_blank">{{ product.title }}</a>
+                        </h5>
+                        <p class="text-muted">Venditore: {{ product.seller }}</p>
+                        <h4>EUR: {{ product.price }}</h4>
+                    </div>
+                </div>
+                <hr class="mb-3">
+            {% empty %}
+                <p>Nessun prodotto trovato. Cambia parola chiave</p>
+            {% endfor %}
+    </div>
     {% include 'footer.html' %}
 
 {% endblock %}

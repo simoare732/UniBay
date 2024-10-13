@@ -24,10 +24,6 @@
     color: white;
 }
 
-.dropdown-scroll {
-    max-height: 200px; /* Set max height for menu */
-    overflow-y: auto; /* Enable vertical scrolling */
-}
 
 .border-margin{
     margin: 0 5%;

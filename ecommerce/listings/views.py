@@ -33,6 +33,11 @@ class list_products_view(ListView):
     ordering = ['-date']
     paginate_by = 10
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['categories'] = Category.objects.all()
+        return ctx
+
 
 class delete_product_view(DeleteView):
     model = Product
@@ -48,6 +53,7 @@ class deatil_product_view(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['product'] = self.object
+        context['categories'] = Category.objects.all()
         return context
 
 class update_product_view(UpdateView):

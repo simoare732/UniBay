@@ -28,21 +28,18 @@
                 <div class="mx-auto" style="width: 50%;">
                     <form method="GET" action="{% url 'pages:list_products' %}" class="d-flex">
                         <!-- Dropdown menu for categories -->
-
-                        <div class="dropdown me-2">
-                            <button class="btn custom-button-reg dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                Categorie
-                            </button>
-                            <ul class="dropdown-menu dropdown-scroll" aria-labelledby="categoryDropdown">
-                                <li><a class="dropdown-item" onclick="setCategory('Categorie')">Categorie</a></li>
+                        <div class="form-group me-2">
+                            <select name="category" class="form-select" id="categorySelect">
+                                <option value="">Categorie</option>
                                 {% for c in categories %}
-                                    <li><a class="dropdown-item" onclick="setCategory('{{ c.name }}')">{{ c.name }}</a></li>
+                                    <option value="{{ c.name }}">{{ c.name }}</option>
                                 {% endfor %}
-                            </ul>
+                            </select>
                         </div>
 
+
                         <!-- Search bar -->
-                        <input class="form-control me-2" type="search" placeholder="Cerca prodotti..." aria-label="Search">
+                        <input class="form-control me-2" type="search" name="q" placeholder="Cerca prodotti..." aria-label="Search">
 
                         <!-- Dropdown menu for filtering -->
                         <div class="dropdown me-2">
