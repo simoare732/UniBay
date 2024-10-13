@@ -1,0 +1,19 @@
+{% extends 'base_pages.html' %}
+
+{% block title %} List of products {% endblock %}
+
+{% block content %}
+    <h1>Lista dei prodotti</h1>
+    {% for product in filter.qs %}
+        <div class="product">
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <p>Prezzo: {{ product.price }}</p>
+        </div>
+    {% empty %}
+        <p>Nessun prodotto trovato.</p>
+    {% endfor %}
+
+    {% include 'footer.html' %}
+
+{% endblock %}

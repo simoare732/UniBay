@@ -30,3 +30,6 @@ Per un'interfaccia più moderna per le categorie si installa django-mptt
 ```powershell
 pip install django-select2
 ```
+Per gestire i filtri si installa django-filter
+```powershell
+pip install django-filter
