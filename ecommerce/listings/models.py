@@ -34,6 +34,8 @@ class Product(models.Model):
 
     date = models.DateTimeField(auto_now_add=True, editable=False, null=True)
 
+    sold = models.PositiveIntegerField(default=0)
+
     def save(self, *args, **kwargs):
         # Before save istance without pk
         if not self.pk:
@@ -69,6 +71,14 @@ class Product(models.Model):
 
     def increase_quantity(self, n):
         self.quantity += n
+        self.save()
+
+    def increase_sold(self, n):
+        self.sold += n
+        self.save()
+
+    def decrease_sold(self, n):
+        self.sold -= n
         self.save()
 
 
