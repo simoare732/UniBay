@@ -1,0 +1,21 @@
+{% for product in products %}
+    <div class="col-md-5 row mb-3">
+        <div class="col-md-3">
+            <div class="image-container" style="border: 1px solid #ddd;">
+                <a href="{% url 'listings:detail_product' product.pk %}" target="_blank">
+                    <img src="{{ product.image1.url }}" alt="{{ product.name }}" class="card-img-top product-image">
+                </a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <h5 class="product-title">
+                <a href="{% url 'listings:detail_product' product.pk %}" style="text-decoration: none; color: inherit;" target="_blank">{{ product.title }}</a>
+            </h5>
+            <p class="text-muted">Venditore: {{ product.seller }}</p>
+            <h4>EUR: {{ product.price }}</h4>
+        </div>
+    </div>
+    <hr class="mb-3">
+{% empty %}
+    <p>Nessun prodotto trovato.</p>
+{% endfor %}
