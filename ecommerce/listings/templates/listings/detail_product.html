@@ -70,7 +70,25 @@
                 <p>{{ product.description }}</p>
             </div>
         </div>
+        <hr class="mb-3" style="width: 100%">
+        <h3>Prodotti consigliati</h3>
+        <div class="row">
+            {% for related_product in related_products %}
+                <div class="col-md-2 mb-4">
+                    <div class="card h-100">
+                        <a href="{% url 'listings:detail_product' related_product.pk %}">
+                            <img src="{{ related_product.image1.url }}" class="card-img-top" alt="{{ related_product.title }}">
+                        </a>
+                        <div class="card-body text-center">
+                            <h6 class="card-title">{{ related_product.title }}</h6>
+                            <p class="card-text">EUR {{ related_product.price }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
+
 
     <script>
         function switchImage(url) {
@@ -98,4 +116,6 @@
             }
         });
     </script>
+
+    {% include 'footer.html' %}
 {% endblock %}

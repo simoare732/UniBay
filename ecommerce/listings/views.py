@@ -50,10 +50,14 @@ class deatil_product_view(DetailView):
     model = Product
     template_name = 'listings/detail_product.html'
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['product'] = self.object
         context['categories'] = Category.objects.all()
+
+        related_products = Product.objects.filter(categories__in=self.object.categories.all()).exclude(id=self.object.id).distinct()[:5]
+        context['related_products'] = related_products
         return context
 
 class update_product_view(UpdateView):
