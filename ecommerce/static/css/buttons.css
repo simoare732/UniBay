@@ -30,3 +30,11 @@
     color: #052F4B !important;
 }
 
+.img-size{
+    max-width: 300px; /* Set max width */
+    max-height: 300px; /* Set max height */
+    width: auto; /* Maintains proportions */
+    height: auto; /* Maintains proportions */
+    display: block; /* Make image part of a block */
+    margin: auto; /* Center image */
+}
