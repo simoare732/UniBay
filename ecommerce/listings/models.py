@@ -3,6 +3,7 @@ import shutil
 from django.db import models
 import os
 from users.models import Seller
+from reviews.models import Review
 
 # Define path to save images of products
 def product_image_path(instance, filename):
@@ -80,6 +81,12 @@ class Product(models.Model):
     def decrease_sold(self, n):
         self.sold -= n
         self.save()
+
+    def average_rating(self):
+        reviews = self.reviews.all()
+        if reviews.exists():
+            return sum(review.rating for review in reviews) / reviews.count()
+        return 0 # If no reviews, return 0 because 0 reviews
 
 
 

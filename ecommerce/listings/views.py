@@ -46,7 +46,7 @@ class delete_product_view(DeleteView):
     def get_success_url(self):
         return reverse('listings:list_products')
 
-class deatil_product_view(DetailView):
+class detail_product_view(DetailView):
     model = Product
     template_name = 'listings/detail_product.html'
 
@@ -55,7 +55,7 @@ class deatil_product_view(DetailView):
         context = super().get_context_data(**kwargs)
         context['product'] = self.object
         context['categories'] = Category.objects.all()
-
+        # This get the products of the same category of the current product
         related_products = Product.objects.filter(categories__in=self.object.categories.all()).exclude(id=self.object.id).distinct()[:5]
         context['related_products'] = related_products
         return context

@@ -27,6 +27,7 @@ urlpatterns = [
     path('', include('pages.urls', namespace='pages')),
     path('users/', include('users.urls')),
     path('listings/', include('listings.urls')),
+    path('reviews/', include('reviews.urls')),
 ]
 
 if settings.DEBUG:

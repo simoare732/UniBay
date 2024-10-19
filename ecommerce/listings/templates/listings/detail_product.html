@@ -64,12 +64,24 @@
 
             </div>
 
-            <div class="description my-5">
-                <h3>Descrizione</h3>
-                <hr class="mb-3" style="width: 100%">
-                <p>{{ product.description }}</p>
+            <div class="description w-100 d-flex justify-content-between align-items-center p-2">
+                    <h3>Descrizione</h3>
+                    <a href="#" class="text-muted">Segnala venditore</a>
             </div>
+            <hr class="mb-3" style="width: 100%">
+            <p>{{ product.description }}</p>
+
         </div>
+
+        <div class="row">
+            <div class="w-100 d-flex justify-content-between align-items-center p-2">
+                <h2>Valutazioni e recensioni del prodotto</h2>
+                <a href="{% url 'reviews:create_review' product.pk %}" class="btn btn-outline-primary">Scrivi una recensione</a>
+            </div>
+
+        </div>
+
+
         <hr class="mb-3" style="width: 100%">
         <h3>Prodotti consigliati</h3>
         <div class="row">

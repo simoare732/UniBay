@@ -1,0 +1,17 @@
+.rating-label {
+    font-size: 1.5rem; /* Ingrandisce la scritta "Valutazione complessiva" */
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.star-icons i {
+    font-size: 2rem;  /* Ingrandisce le stelle */
+    color: #FFD700;   /* Puoi cambiare colore delle stelle se preferisci, esempio: dorato */
+    cursor: pointer;  /* Cambia il cursore per indicare che sono cliccabili */
+    margin-right: 5px;
+}
+
+.star-icons i:hover {
+    color: #FFC107;  /* Cambia il colore quando passi il mouse sopra */
+}
