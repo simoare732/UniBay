@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete seller review{% endblock %}
+
+{% block content %}
+    {% include 'head.html' %}
+    <div class="container mt-5">
+        <h2>Riepilogo</h2>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ seller_review.title }}</h5>
+                <p class="card-text">{{ seller_review.comment }}</p>
+
+            </div>
+        </div>
+        <div class="mt-3">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Si elimina</button>
+                {% if product %}
+                    <a class="btn btn-secondary" href="{% url 'listings:detail_product' product %}">Torna indietro</a>
+                {% else %}
+                    <a class="btn btn-secondary" href="{% url 'pages:home_page' %}">Torna indietro</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

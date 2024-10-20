@@ -1,0 +1,28 @@
+{% extends 'base_pages.html' %}
+{% load static %}
+
+{% block title %}Update seller review{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3 class="mt-4">Modifica recensione</h3>
+        <hr class="mb-3">
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success btn-block">Invia</button>
+            {% if product  %}
+                <a class="btn btn-secondary" href="{% url 'listings:detail_product' product %}">Annulla</a>
+            {% else %}
+                <a class="btn btn-secondary" href="{% url 'pages:home_page' %}">Annulla</a>
+            {% endif %}
+        </form>
+
+
+    </div>
+
+    {% include 'footer.html' %}
+
+    <script src="{% static 'js/star.js' %}"></script>
+{% endblock %}

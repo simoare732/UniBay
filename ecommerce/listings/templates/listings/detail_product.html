@@ -170,8 +170,17 @@
                 <div>
                     <h5>Username: {{ product.seller.user.username }}</h5>
                     <p>Iscritto in Data: {{ product.seller.user.date_joined}}</p>
-                    <a href="#" class="btn btn-outline-primary">Recensione al venditore</a>
-                    <a href="#" class="btn btn-outline-secondary">Visualizza recensioni</a>
+                    {% if user.is_authenticated %}
+                        {% if seller_review %}
+                             <a href="{% url 'reviews:update_seller_review' product.seller.pk %}?product_pk={{ product.pk }}" class="btn btn-outline-primary">Modifica recensione</a>
+                             <a href="{% url 'reviews:delete_seller_review' product.seller.pk %}?product_pk={{ product.pk }}" class="btn btn-outline-danger">Elimina recensione</a>
+                        {% else %}
+                             <a href="{% url 'reviews:create_seller_review' product.seller.pk %}?product_pk={{ product.pk }}" class="btn btn-outline-primary">Recensione al venditore</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'users:login' %}" class="btn btn-outline-primary">Recensione al venditore</a>
+                    {% endif %}
+                    <a href="{% url 'reviews:list_seller_review' %}?product_pk={{ product.pk }}" class="btn btn-outline-secondary">Visualizza recensioni</a>
                 </div>
             </div>
         </div>
