@@ -16,7 +16,7 @@ def product_image_path(instance, filename):
 
 class Product(models.Model):
 
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name='products')
     title = models.CharField(max_length=255)
 
     description = models.TextField()

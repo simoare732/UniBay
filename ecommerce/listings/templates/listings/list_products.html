@@ -15,7 +15,7 @@
                 <label for="searchInput" class="form-label">Cerca tra i tuoi prodotti</label>
                 <input type="text" id="searchInput" class="form-control mb-4" placeholder="Cerca per titolo...">
                 <div class="row" id="productList">
-                    {% for product in object_list %}
+                    {% for product in products.all %}
                         <div class="col-md-4 mb-4 product-card">
                             <div class="card">
                                 <div class="card-header">

@@ -1,7 +1,7 @@
 {% extends 'base_pages.html' %}
 {% load static %}
 
-{% block title %}Crea una recensione{% endblock %}
+{% block title %}Update review{% endblock %}
 
 {% block head %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -10,7 +10,7 @@
 
 {% block content %}
     <div class="container">
-        <h3 class="mt-4">Crea una recensione</h3>
+        <h3 class="mt-4">Modifica recensione</h3>
         <div class="col-md-5 row mb-3">
             <div class="col-md-2">
                 <div class="image-container" style="border: 1px solid #ddd;">
@@ -38,11 +38,11 @@
             {{ form.rating }}
 
             <div class="mb-3">
-                <p class="rating-label">Aggiungi un titolo</p>
+                <p class="rating-label">Modifica titolo</p>
                 {{ form.title }}
             </div>
             <div class="mb-3">
-                <p class="rating-label">Aggiungi una recensione scritta</p>
+                <p class="rating-label">Modifica recensione scritta</p>
                 {{ form.comment }}
             </div>
             <button type="submit" class="btn btn-success btn-block">Invia</button>
@@ -55,6 +55,4 @@
     {% include 'footer.html' %}
 
     <script src="{% static 'js/star.js' %}"></script>
-
-
 {% endblock %}

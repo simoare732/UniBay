@@ -4,8 +4,9 @@
 {% block title %} Product detail {% endblock %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/image.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -39,11 +40,31 @@
                 </div>
             </div>
             <div class="col-md-6 me-4">
-                <img id="main-image" src="{{ product.image1.url }}" alt="{{ product.title }}" class="img-fluid mb-3">
+                <img id="main-image" src="{{ product.image1.url }}" alt="{{ product.title }}" class="detail-img-fluid detail-img-container mb-3">
             </div>
 
             <div class="col-md-4 d-flex flex-column align-items-start ms-4">
                 <h1 class="mb-2">{{ product.title }}</h1>
+
+                <div class="d-flex align-items-center"> <!-- Flexbox per allineamento -->
+                    <!-- Stelle -->
+                    <div class="d-flex align-items-center me-2"> <!-- Flexbox per le stelle -->
+                        {% with product.average_rating as avg_rating %}
+                            {% for i in "12345" %}
+                                {% if avg_rating >= forloop.counter %}
+                                    <i class="fas fa-star mini-star"></i> <!-- full star -->
+                                {% elif avg_rating >= forloop.counter|add:"-0.5" %}
+                                    <i class="fas fa-star-half-alt mini-star"></i> <!-- half star -->
+                                {% else %}
+                                    <i class="far fa-star mini-star"></i> <!-- empty star -->
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+                    <!-- Titolo della recensione -->
+                    <p class="mb-0 h5">{{ product.average_rating }}</p> <!-- Imposta mb-0 per evitare margine inferiore -->
+                </div>
+
                 <hr class="mb-3" style="width: 100%">
                 <h3 class="price mt-3">EUR {{ product.price }}</h3>
                 <div class="d-flex align-items-center mt-3">
@@ -75,11 +96,87 @@
 
         <div class="row">
             <div class="w-100 d-flex justify-content-between align-items-center p-2">
-                <h2>Valutazioni e recensioni del prodotto</h2>
-                <a href="{% url 'reviews:create_review' product.pk %}" class="btn btn-outline-primary">Scrivi una recensione</a>
+                <h3>Valutazioni e recensioni del prodotto</h3>
+                {% if user.is_authenticated %}
+                    {% if not user_has_reviewed %}
+                        <a href="{% url 'reviews:create_review' product.pk %}" class="btn btn-outline-secondary">Scrivi una recensione</a>
+                    {% else %}
+                        <div class="d-flex flex-column">
+                            <a href="{% url 'reviews:update_review' user_review %}" class="btn btn-outline-secondary mb-1">Modifica la tua recensione</a>
+                            <a href="{% url 'reviews:delete_review' user_review %}" class="btn btn-outline-danger">Elimina la tua recensione</a>
+                        </div>
+
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'users:login' %}" class="btn btn-outline-secondary">Scrivi una recensione</a>
+                {% endif %}
             </div>
 
+            <div class="d-flex align-items-center">
+            <h1 class="me-2">{{ product.average_rating|floatformat:1 }}</h1>
+
+                <div class="rating">
+                    {% with product.average_rating as avg_rating %}
+                        {% for i in "12345" %}
+                            {% if avg_rating >= forloop.counter %}
+                                <i class="fas fa-star star"></i> <!-- full star -->
+                            {% elif avg_rating >= forloop.counter|add:"-0.5" %}
+                                <i class="fas fa-star-half-alt star"></i> <!-- half star -->
+                            {% else %}
+                                <i class="far fa-star star"></i> <!-- empty star -->
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+            </div>
+            <p class="text-muted">{{ product.reviews.count }} Valutazioni del prodotto</p>
+
+            <div class="reviews">
+                {% if product.reviews.count == 0 %}
+                    <a href="{% url 'reviews:create_review' product.pk %}" class="text-muted h4">Scrivi una recensione per primo</a>
+                {% else %}
+                    {% for r in product.reviews.all %}
+                        <div class="review mb-3">
+                            <p class="fw-bold">{{ r.user.username }}</p>
+                            <div class="d-flex align-items-center">
+                                <!-- Stars -->
+                                <div class="d-flex align-items-center me-2"> <!-- To see stars next -->
+                                    {% for i in "12345" %}
+                                        {% if r.rating >= forloop.counter %}
+                                            <i class="fas fa-star"></i> <!-- full star -->
+                                        {% else %}
+                                            <i class="far fa-star"></i> <!-- empty star -->
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <!-- Title of review -->
+                                <p class="mb-0 fw-bold">{{ r.title }}</p>
+                            </div>
+                            <!-- Comment of review -->
+                            <p class="my-3">{{ r.comment }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+
         </div>
+
+        <hr class="mb-3" style="width: 100%">
+
+        <div class="bg-light p-3">
+            <h3>Informazioni sul venditore</h3>
+            <div class="d-flex align-items-center">
+                <div>
+                    <h5>Username: {{ product.seller.user.username }}</h5>
+                    <p>Iscritto in Data: {{ product.seller.user.date_joined}}</p>
+                    <a href="#" class="btn btn-outline-primary">Recensione al venditore</a>
+                    <a href="#" class="btn btn-outline-secondary">Visualizza recensioni</a>
+                </div>
+            </div>
+        </div>
+
+
 
 
         <hr class="mb-3" style="width: 100%">
@@ -89,7 +186,7 @@
                 <div class="col-md-2 mb-4">
                     <div class="card h-100">
                         <a href="{% url 'listings:detail_product' related_product.pk %}">
-                            <img src="{{ related_product.image1.url }}" class="card-img-top" alt="{{ related_product.title }}">
+                            <img src="{{ related_product.image1.url }}" class="card-img-top related-img" alt="{{ related_product.title }}">
                         </a>
                         <div class="card-body text-center">
                             <h6 class="card-title">{{ related_product.title }}</h6>
@@ -101,33 +198,7 @@
         </div>
     </div>
 
-
-    <script>
-        function switchImage(url) {
-            document.getElementById('main-image').src = url;
-        }
-
-        function toggleFavorite() {
-            const heartIcon = document.getElementById('heart-icon');
-            if (heartIcon.classList.contains("far")) {
-                heartIcon.classList.remove("far");
-                heartIcon.classList.add("fas"); // Filled heart
-            } else {
-                heartIcon.classList.remove("fas");
-                heartIcon.classList.add("far"); // Outlined heart
-            }
-            const isFavorite = heartIcon.classList.toggle('favorite');
-            localStorage.setItem('isFavorite', isFavorite);
-        }
-
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const heartIcon = document.getElementById('heart-icon');
-            const isFavorite = localStorage.getItem('isFavorite') === 'true';
-            if (isFavorite) {
-                heartIcon.classList.add('favorite');
-            }
-        });
-    </script>
+    <script src="{% static 'js/favourite.js' %}"></script>
 
     {% include 'footer.html' %}
 {% endblock %}

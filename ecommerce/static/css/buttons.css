@@ -38,3 +38,12 @@
     display: block; /* Make image part of a block */
     margin: auto; /* Center image */
 }
+
+.star{
+    font-size: 2rem;
+    color: #FFD700;
+}
+
+.mini-star{
+    color: #FFD700;
+}

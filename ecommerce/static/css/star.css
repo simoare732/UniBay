@@ -1,3 +1,4 @@
+/* Make bigger the labels */
 .rating-label {
     font-size: 1.5rem; /* Ingrandisce la scritta "Valutazione complessiva" */
     font-weight: bold;
@@ -5,13 +6,16 @@
     display: block;
 }
 
+/* Every star is an element <i>. This make bigger the stars and change the colour.
+ Then change the cursor to denote that the stars are clickable */
 .star-icons i {
-    font-size: 2rem;  /* Ingrandisce le stelle */
-    color: #FFD700;   /* Puoi cambiare colore delle stelle se preferisci, esempio: dorato */
-    cursor: pointer;  /* Cambia il cursore per indicare che sono cliccabili */
+    font-size: 2rem;
+    color: #FFD700;
+    cursor: pointer;
     margin-right: 5px;
 }
 
+/* When you pass the mouse over the stars, change the colour */
 .star-icons i:hover {
-    color: #FFC107;  /* Cambia il colore quando passi il mouse sopra */
+    color: #FFC107;
 }

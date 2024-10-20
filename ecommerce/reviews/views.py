@@ -1,10 +1,9 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.urls import reverse
+from django.views.generic import CreateView, UpdateView, DeleteView
 
 from listings.models import Category, Product
 from .models import Review
-from .forms import review_create_form
+from .forms import *
 
 class create_review_view(CreateView):
     model = Review
@@ -24,4 +23,29 @@ class create_review_view(CreateView):
 
 
     def get_success_url(self):
-        return reverse_lazy('listings:detail_product', kwargs={'pk': self.kwargs['pk']})
+        return reverse('listings:detail_product', kwargs={'pk': self.kwargs['pk']})
+
+
+class update_review_view(UpdateView):
+    model = Review
+    template_name = 'reviews/update_review.html'
+    form_class = review_create_form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        review = self.get_object()
+        context['product'] = review.product
+        return context
+
+    def get_success_url(self):
+        review = self.get_object()
+        return reverse('listings:detail_product', kwargs={'pk': review.product.pk})
+
+
+class delete_review_view(DeleteView):
+    model = Review
+    template_name = 'reviews/delete_review.html'
+
+    def get_success_url(self):
+        review = self.get_object()
+        return reverse('listings:detail_product', kwargs={'pk': review.product.pk})

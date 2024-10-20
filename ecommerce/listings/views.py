@@ -13,7 +13,7 @@ class create_product_view(CreateView):
     form_class = product_create_form
 
     def get_success_url(self):
-        return reverse_lazy('users:profile_seller', kwargs={'pk': self.object.seller.pk})
+        return reverse('users:profile_seller', kwargs={'pk': self.object.seller.pk})
 
     def form_valid(self, form):
         # Pass the current user to the form
@@ -35,6 +35,8 @@ class list_products_view(ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
+        ctx['seller'] = self.request.user.seller
+        ctx['products'] = self.request.user.seller.products
         ctx['categories'] = Category.objects.all()
         return ctx
 
@@ -55,9 +57,22 @@ class detail_product_view(DetailView):
         context = super().get_context_data(**kwargs)
         context['product'] = self.object
         context['categories'] = Category.objects.all()
+
         # This get the products of the same category of the current product
         related_products = Product.objects.filter(categories__in=self.object.categories.all()).exclude(id=self.object.id).distinct()[:5]
         context['related_products'] = related_products
+
+        if self.request.user.is_authenticated:
+            context['user_has_reviewed'] = self.object.reviews.filter(user=self.request.user).exists()
+            user_review = self.object.reviews.filter(user=self.request.user).first()
+            if user_review:
+                context['user_review'] = user_review.pk
+            else:
+                context['user_review'] = None
+        else:
+            context['user_has_reviewed'] = False
+            context['user_review'] = None
+
         return context
 
 class update_product_view(UpdateView):

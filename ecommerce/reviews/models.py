@@ -1,8 +1,8 @@
 from django.db import models
 
 class Review(models.Model):
-    product = models.ForeignKey('listings.Product', on_delete=models.CASCADE)
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    product = models.ForeignKey('listings.Product', on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='reviews')
     title = models.CharField(max_length=100)
     rating = models.IntegerField() #Value between 1 and 5
     comment = models.TextField(blank=True, null=True)

@@ -1,0 +1,30 @@
+.img-fluid{
+    max-height: 140px;
+    object-fit: contain;
+}
+
+.image-container {
+    width: 100%; /* Imposta la larghezza del contenitore */
+    height: 150px; /* Imposta un'altezza fissa */
+    display: flex;
+    justify-content: center; /* Centra l'immagine orizzontalmente */
+    align-items: center; /* Centra l'immagine verticalmente */
+}
+
+.detail-img-fluid{
+    max-height: 500px;
+    object-fit: contain;
+}
+
+.detail-img-container{
+    width: 100%; /* Imposta la larghezza del contenitore */
+    height: 550px; /* Imposta un'altezza fissa */
+    display: flex;
+    justify-content: center; /* Centra l'immagine orizzontalmente */
+    align-items: center; /* Centra l'immagine verticalmente */
+}
+
+.related-img{
+    max-height: 150px;
+    object-fit: contain;
+}

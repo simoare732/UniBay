@@ -1,41 +1,51 @@
+// Select all stars and rating input
 const stars = document.querySelectorAll('#star-rating i');
 const ratingInput = document.getElementById('rating');
-let currentRating = 0; // Valore corrente della valutazione selezionata
+// Value of the current selected rating
+let currentRating = 0;
 
-// Aggiungi evento click su ogni stella
+// For every star is added an event listener to handle the click event
 stars.forEach(star => {
     star.addEventListener('click', function() {
+        // Get the rating value of the clicked star (like 1,2,...5)
         const rating = this.getAttribute('data-value');
 
-        // Aggiorna il campo nascosto con la valutazione selezionata
+        // Update the hidden input value
         ratingInput.value = rating;
+        // Save the current rating
         currentRating = rating; // Memorizza la valutazione corrente
 
-        // Cambia visivamente le stelle (piene fino a quella selezionata)
+        // Change the visual state of the stars
         updateStars(rating);
     });
 
-    // Aggiungi effetto hover per mostrare temporaneamente la valutazione
+    // Add an event listener to handle the mouseover event (to color the stars when the mouse is over them)
     star.addEventListener('mouseover', function() {
+        // Get the rating value of the hovered star
         const rating = this.getAttribute('data-value');
-        updateStars(rating);  // Riempie le stelle in base a dove è il mouse
+        // Change the visual state of the stars
+        updateStars(rating);
     });
 
-    // Quando il mouse esce dall'area delle stelle, ripristina la valutazione selezionata
+    // Add an event listener to handle the mouseout event (to uncolor the stars when the mouse is out them)
     star.addEventListener('mouseout', function() {
-        updateStars(currentRating); // Torna alla valutazione corrente
+        // Back to the current rating
+        updateStars(currentRating);
     });
 });
 
-// Funzione per aggiornare lo stato visivo delle stelle
+// Func to update the visual state of the stars (the index is between 0 and 4)
 function updateStars(rating) {
     stars.forEach((s, index) => {
+        // If the index of the star is less than the rating the star is colored
         if (index < rating) {
-            s.classList.remove('far'); // Rimuove l'icona vuota
-            s.classList.add('fas');    // Aggiunge l'icona piena
+            s.classList.remove('far'); // Remove empty icon
+            s.classList.add('fas');    // Add full icon
+        // Otherwise the star is uncolored
         } else {
-            s.classList.remove('fas'); // Rimuove l'icona piena
-            s.classList.add('far');    // Aggiunge l'icona vuota
+            s.classList.remove('fas'); // Remove full icon
+            s.classList.add('far');    // Add empty icon
         }
     });
 }
+
