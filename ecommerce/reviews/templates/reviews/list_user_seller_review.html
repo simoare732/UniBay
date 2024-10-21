@@ -1,0 +1,37 @@
+{% extends 'base_pages.html' %}
+
+{% block title %} List user review {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="description w-100 d-flex justify-content-between align-items-center p-2">
+            <h1 class="display-4">Le tue recensioni sui venditori</h1>
+        </div>
+        <hr>
+
+        <div class="row">
+            {% for review in reg_user.seller_reviews_by_user.all %}
+                <div class="col-md-12 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+
+                            <h3>{{ review.seller.user.username }}</h3>
+
+                            <!-- Title of review -->
+                            <p class="mb-0 fw-bold">{{ review.title }}</p>
+                        </div>
+                    <p class="my-3 mx-2">{{ review.comment }}</p>
+
+                    </div>
+                    <div class="my-2">
+                        <a href="{% url 'reviews:update_seller_review' review.pk %}" class="btn btn-outline-primary">Modifica</a>
+                        <a href="{% url 'reviews:delete_seller_review' review.pk %}" class="btn btn-outline-danger">Elimina</a>
+                    </div>
+
+                    <hr>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}

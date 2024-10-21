@@ -1,0 +1,67 @@
+{% extends 'base_pages.html' %}
+
+{% block title %} List user review {% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="description w-100 d-flex justify-content-between align-items-center p-2">
+            <h1 class="display-4">Le tue recensioni sui prodotti</h1>
+        </div>
+        <hr>
+
+        <div class="row">
+            {% for review in reg_user.product_reviews.all %}
+                <div class="col-md-12 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+
+                            <div class="col-md-5 row mb-3">
+                                <div class="col-md-2">
+                                    <div class="image-container" style="border: 1px solid #ddd;">
+                                        <a href="{% url 'listings:detail_product' review.product.pk %}" target="_blank">
+                                            <img src="{{ review.product.image1.url }}" alt="{{ product.name }}" class="card-img-top product-image">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <p>
+                                        <a href="{% url 'listings:detail_product' review.product.pk %}" style="text-decoration: none; color: inherit;" target="_blank">{{ review.product.title }}</a>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <!-- Stars -->
+                            <div class="d-flex align-items-center me-2 mx-2 my-2"> <!-- To see stars next -->
+                                {% for i in "12345" %}
+                                    {% if review.rating >= forloop.counter %}
+                                        <i class="fas fa-star"></i> <!-- full star -->
+                                    {% else %}
+                                        <i class="far fa-star"></i> <!-- empty star -->
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <!-- Title of review -->
+                            <p class="mb-0 fw-bold">{{ review.title }}</p>
+                        </div>
+                    <p class="my-3 mx-2">{{ review.comment }}</p>
+
+                    </div>
+                    <div class="my-2">
+                        <a href="{% url 'reviews:update_review' review.seller.pk %}" class="btn btn-outline-primary">Modifica</a>
+                        <a href="{% url 'reviews:delete_review' review.seller.pk %}" class="btn btn-outline-danger">Elimina</a>
+                    </div>
+
+                    <hr>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}

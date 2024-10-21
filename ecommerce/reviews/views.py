@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 
-from listings.models import Product
+from listings.models import Product, Category
 from users.models import Seller
 from .models import Review, Seller_Review
 from .forms import *
@@ -13,13 +13,15 @@ class create_review_view(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # To get all the Categories for search bar
+        context['categories'] = Category.objects.all()
         context['product'] = Product.objects.get(pk=self.kwargs['pk'])
         return context
 
     def form_valid(self, form):
         product_id = self.kwargs.get('pk')  # Ottieni l'ID del prodotto dalla URL
         form.instance.product = Product.objects.get(pk=product_id)  # Associa la recensione al prodotto
-        form.instance.user = self.request.user  # Associa la recensione all'utente loggato
+        form.instance.reg_user = self.request.user.registered_user  # Associa la recensione all'utente loggato
         return super().form_valid(form)
 
 
@@ -35,6 +37,8 @@ class update_review_view(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         review = self.get_object()
+        # To get all the Categories for search bar
+        context['categories'] = Category.objects.all()
         context['product'] = review.product
         return context
 
@@ -60,6 +64,8 @@ class create_seller_review_view(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # To get all the Categories for search bar
+        context['categories'] = Category.objects.all()
         context['seller'] = Seller.objects.get(pk=self.kwargs['pk'])
 
         # Recupera il product_pk dai query parameters
@@ -74,8 +80,8 @@ class create_seller_review_view(CreateView):
     def form_valid(self, form):
         seller_id = self.kwargs.get('pk')  # Ottieni l'ID del venditore dalla URL
         seller = Seller.objects.get(pk=seller_id)  # Ottieni l'istanza del venditore
-        form.instance.seller = seller.user  # Associa l'oggetto User del venditore alla recensione
-        form.instance.user = self.request.user  # Associa la recensione all'utente loggato
+        form.instance.seller = seller  # Associa l'oggetto User del venditore alla recensione
+        form.instance.reg_user = self.request.user.registered_user  # Associa la recensione all'utente loggato
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -94,6 +100,8 @@ class update_seller_review_view(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         seller_review = self.get_object()
+        # To get all the Categories for search bar
+        context['categories'] = Category.objects.all()
         context['seller'] = seller_review.seller
 
         # Recupera il product_pk dai query parameters
@@ -145,6 +153,13 @@ class list_seller_review_view(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # To get all the Categories for search bar
+        context['categories'] = Category.objects.all()
+
+        seller_pk = self.kwargs.get('pk')
+        context['seller'] = Seller.objects.get(pk=seller_pk)
+
+        context['seller_reviews'] = Seller_Review.objects.filter(seller=context['seller'])
 
         # Recupera il product_pk dai query parameters
         product_pk = self.request.GET.get('product_pk')
@@ -152,5 +167,35 @@ class list_seller_review_view(ListView):
             context['product'] = product_pk
         else:
             context['product'] = None
+
+        return context
+
+
+class list_user_review_view(ListView):
+    model = Review
+    template_name = 'reviews/list_user_review.html'
+    ordering = ['-date']
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # To get all the Categories for search bar
+        context['categories'] = Category.objects.all()
+        context['reg_user'] = self.request.user.registered_user
+
+        return context
+
+
+class list_user_seller_review_view(ListView):
+    model = Seller_Review
+    template_name = 'reviews/list_user_seller_review.html'
+    ordering = ['-date']
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # To get all the Categories for search bar
+        context['categories'] = Category.objects.all()
+        context['reg_user'] = self.request.user.registered_user
 
         return context

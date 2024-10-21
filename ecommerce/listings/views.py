@@ -62,24 +62,21 @@ class detail_product_view(DetailView):
         related_products = Product.objects.filter(categories__in=self.object.categories.all()).exclude(id=self.object.id).distinct()[:5]
         context['related_products'] = related_products
 
-        if self.request.user.is_authenticated:
-            # This is used to check if the user has already reviewed the product
-            context['user_has_reviewed'] = self.object.reviews.filter(user=self.request.user).exists()
+        if self.request.user.is_authenticated and self.request.user.is_registered_user:
             # This is to take the review of the user if it exists
-            user_review = self.object.reviews.filter(user=self.request.user).first()
+            user_review = self.object.reviews.filter(reg_user=self.request.user.registered_user).first()
             if user_review:
                 context['user_review'] = user_review.pk
             else:
                 context['user_review'] = None
 
             # This is used to check if the user has already reviewed the seller
-            seller_review = self.object.seller.user.seller_reviews.filter(user=self.request.user).first()
+            seller_review = self.object.seller.seller_reviews.filter(reg_user=self.request.user.registered_user).first()
             if seller_review:
                 context['seller_review'] = seller_review.pk
             else:
                 context['seller_review'] = None
         else:
-            context['user_has_reviewed'] = False
             context['user_review'] = None
             context['seller_review'] = None
 

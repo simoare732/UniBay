@@ -61,8 +61,7 @@
                             {% endfor %}
                         {% endwith %}
                     </div>
-                    <!-- Titolo della recensione -->
-                    <p class="mb-0 h5">{{ product.average_rating }}</p> <!-- Imposta mb-0 per evitare margine inferiore -->
+                    <p class="mb-0 h5">{{ product.average_rating }}</p>
                 </div>
 
                 <hr class="mb-3" style="width: 100%">
@@ -98,14 +97,15 @@
             <div class="w-100 d-flex justify-content-between align-items-center p-2">
                 <h3>Valutazioni e recensioni del prodotto</h3>
                 {% if user.is_authenticated %}
-                    {% if not user_has_reviewed %}
-                        <a href="{% url 'reviews:create_review' product.pk %}" class="btn btn-outline-secondary">Scrivi una recensione</a>
-                    {% else %}
-                        <div class="d-flex flex-column">
-                            <a href="{% url 'reviews:update_review' user_review %}" class="btn btn-outline-secondary mb-1">Modifica la tua recensione</a>
-                            <a href="{% url 'reviews:delete_review' user_review %}" class="btn btn-outline-danger">Elimina la tua recensione</a>
-                        </div>
-
+                    {% if user.is_registered_user %}
+                        {% if user_review == None %}
+                            <a href="{% url 'reviews:create_review' product.pk %}" class="btn btn-outline-secondary">Scrivi una recensione</a>
+                        {% else %}
+                            <div class="d-flex flex-column">
+                                <a href="{% url 'reviews:update_review' user_review %}" class="btn btn-outline-secondary mb-1">Modifica la tua recensione</a>
+                                <a href="{% url 'reviews:delete_review' user_review %}" class="btn btn-outline-danger">Elimina la tua recensione</a>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 {% else %}
                     <a href="{% url 'users:login' %}" class="btn btn-outline-secondary">Scrivi una recensione</a>
@@ -171,16 +171,18 @@
                     <h5>Username: {{ product.seller.user.username }}</h5>
                     <p>Iscritto in Data: {{ product.seller.user.date_joined}}</p>
                     {% if user.is_authenticated %}
-                        {% if seller_review %}
-                             <a href="{% url 'reviews:update_seller_review' product.seller.pk %}?product_pk={{ product.pk }}" class="btn btn-outline-primary">Modifica recensione</a>
-                             <a href="{% url 'reviews:delete_seller_review' product.seller.pk %}?product_pk={{ product.pk }}" class="btn btn-outline-danger">Elimina recensione</a>
-                        {% else %}
-                             <a href="{% url 'reviews:create_seller_review' product.seller.pk %}?product_pk={{ product.pk }}" class="btn btn-outline-primary">Recensione al venditore</a>
+                        {% if user.is_registered_user %}
+                            {% if seller_review %}
+                                <a href="{% url 'reviews:update_seller_review' product.seller.pk %}?product_pk={{ product.pk }}" class="btn btn-outline-primary">Modifica recensione</a>
+                                <a href="{% url 'reviews:delete_seller_review' product.seller.pk %}?product_pk={{ product.pk }}" class="btn btn-outline-danger">Elimina recensione</a>
+                            {% else %}
+                                <a href="{% url 'reviews:create_seller_review' product.seller.pk %}?product_pk={{ product.pk }}" class="btn btn-outline-primary">Recensione al venditore</a>
+                            {% endif %}
                         {% endif %}
                     {% else %}
                         <a href="{% url 'users:login' %}" class="btn btn-outline-primary">Recensione al venditore</a>
                     {% endif %}
-                    <a href="{% url 'reviews:list_seller_review' %}?product_pk={{ product.pk }}" class="btn btn-outline-secondary">Visualizza recensioni</a>
+                    <a href="{% url 'reviews:list_seller_review' product.seller.pk %}?product_pk={{ product.pk }}" class="btn btn-outline-secondary">Visualizza recensioni</a>
                 </div>
             </div>
         </div>

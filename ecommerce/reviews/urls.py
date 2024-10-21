@@ -10,5 +10,7 @@ urlpatterns = [
     path('create_seller_review/<int:pk>/', create_seller_review_view.as_view(), name='create_seller_review'),
     path('update_seller_review/<int:pk>/', update_seller_review_view.as_view(), name='update_seller_review'),
     path('delete_seller_review/<int:pk>/', delete_seller_review_view.as_view(), name='delete_seller_review'),
-    path('list_seller_review/', list_seller_review_view.as_view(), name='list_seller_review'),
+    path('list_seller_review/<int:pk>/', list_seller_review_view.as_view(), name='list_seller_review'),
+    path('list_user_review/', list_user_review_view.as_view(), name='list_user_review'),
+    path('list_user_seller_review/', list_user_seller_review_view.as_view(), name='list_user_seller_review'),
 ]

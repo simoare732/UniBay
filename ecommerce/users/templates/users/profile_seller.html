@@ -21,7 +21,8 @@
                 </div>
                 <div class="my-3 d-flex flex-column align-items-start">
                     <a href="{% url 'listings:list_products' %}" class="btn custom-button mb-2">Info sui prodotti</a>
-                    <a href="{% url 'listings:create_product' %}" class="btn custom-button-reg">Aggiungi prodotto</a>
+                    <a href="{% url 'listings:create_product' %}" class="btn custom-button-reg mb-2">Aggiungi prodotto</a>
+                    <a href="{% url 'reviews:list_seller_review' object.pk %}" class="btn custom-button-reg">Visualizza recensioni</a>
                 </div>
             </div>
         </div>
