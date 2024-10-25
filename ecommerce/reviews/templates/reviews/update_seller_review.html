@@ -14,6 +14,8 @@
             <button type="submit" class="btn btn-success btn-block">Invia</button>
             {% if product  %}
                 <a class="btn btn-secondary" href="{% url 'listings:detail_product' product %}">Annulla</a>
+            {% elif succ == 'profile' %}
+                <a class="btn btn-secondary" href="{% url 'reviews:list_user_seller_review' %}">Annulla</a>
             {% else %}
                 <a class="btn btn-secondary" href="{% url 'pages:home_page' %}">Annulla</a>
             {% endif %}

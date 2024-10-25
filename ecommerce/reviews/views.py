@@ -40,9 +40,21 @@ class update_review_view(UpdateView):
         # To get all the Categories for search bar
         context['categories'] = Category.objects.all()
         context['product'] = review.product
+
+
+        succ = self.request.GET.get('succ')
+        if succ and succ == 'profile':
+            context['succ'] = 'profile'
+        else:
+            context['succ'] = None
+
         return context
 
     def get_success_url(self):
+        #If in the URL there is a query parameter 'succ' with value 'profile', redirect to the user's reviews list
+        succ = self.request.GET.get('succ')
+        if succ and succ=='profile':
+            return reverse('reviews:list_user_review')
         review = self.get_object()
         return reverse('listings:detail_product', kwargs={'pk': review.product.pk})
 
@@ -51,7 +63,23 @@ class delete_review_view(DeleteView):
     model = Review
     template_name = 'reviews/delete_review.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        succ = self.request.GET.get('succ')
+        if succ and succ == 'profile':
+            context['succ'] = 'profile'
+        else:
+            context['succ'] = None
+
+        return context
+
+
+
     def get_success_url(self):
+        # If in the URL there is a query parameter 'succ' with value 'profile', redirect to the user's reviews list
+        succ = self.request.GET.get('succ')
+        if succ and succ == 'profile':
+            return reverse('reviews:list_user_review')
         review = self.get_object()
         return reverse('listings:detail_product', kwargs={'pk': review.product.pk})
 
@@ -104,6 +132,12 @@ class update_seller_review_view(UpdateView):
         context['categories'] = Category.objects.all()
         context['seller'] = seller_review.seller
 
+        succ = self.request.GET.get('succ')
+        if succ and succ == 'profile':
+            context['succ'] = 'profile'
+        else:
+            context['succ'] = None
+
         # Recupera il product_pk dai query parameters
         product_pk = self.request.GET.get('product_pk')
         if product_pk:
@@ -114,9 +148,14 @@ class update_seller_review_view(UpdateView):
         return context
 
     def get_success_url(self):
+        # If in the URL there is a query parameter 'succ' with value 'profile', redirect to the user's reviews list
+        succ = self.request.GET.get('succ')
+
         product_pk = self.request.GET.get('product_pk')
         if product_pk:
             return reverse('listings:detail_product', kwargs={'pk': product_pk})
+        elif succ and succ == 'profile':
+            return reverse('reviews:list_user_seller_review')
         else:
             return reverse('pages:home_page')
 
@@ -135,12 +174,23 @@ class delete_seller_review_view(DeleteView):
         else:
             context['product'] = None
 
+        succ = self.request.GET.get('succ')
+        if succ and succ == 'profile':
+            context['succ'] = 'profile'
+        else:
+            context['succ'] = None
+
         return context
 
     def get_success_url(self):
+        # If in the URL there is a query parameter 'succ' with value 'profile', redirect to the user's reviews list
+        succ = self.request.GET.get('succ')
+
         product_pk = self.request.GET.get('product_pk')
         if product_pk:
             return reverse('listings:detail_product', kwargs={'pk': product_pk})
+        elif succ and succ == 'profile':
+            return reverse('reviews:list_user_seller_review')
         else:
             return reverse('pages:home_page')
 

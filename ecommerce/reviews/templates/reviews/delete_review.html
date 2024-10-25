@@ -31,7 +31,12 @@
             <form method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Si elimina</button>
-                <a href="{% url 'listings:detail_product' review.product.pk %}" class="btn btn-secondary">Torna indietro</a>
+                {% if succ == 'profile' %}
+                    <a href="{% url 'reviews:list_user_review' %}" class="btn btn-secondary">Torna indietro</a>
+                {% else %}
+                    <a href="{% url 'listings:detail_product' review.product.pk %}" class="btn btn-secondary">Torna indietro</a>
+                {% endif %}
+
             </form>
         </div>
     </div>

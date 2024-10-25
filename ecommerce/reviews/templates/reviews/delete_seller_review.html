@@ -19,6 +19,8 @@
                 <button type="submit" class="btn btn-danger">Si elimina</button>
                 {% if product %}
                     <a class="btn btn-secondary" href="{% url 'listings:detail_product' product %}">Torna indietro</a>
+                {% elif succ == 'profile' %}
+                    <a class="btn btn-secondary" href="{% url 'reviews:list_user_seller_review' %}">Torna indietro</a>
                 {% else %}
                     <a class="btn btn-secondary" href="{% url 'pages:home_page' %}">Torna indietro</a>
                 {% endif %}
