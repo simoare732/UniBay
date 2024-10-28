@@ -2,6 +2,8 @@ from django.http import request
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, DeleteView, DetailView, UpdateView
+
+from watchlist.models import Favourite
 from .models import *
 from .forms import product_create_form
 
@@ -79,6 +81,12 @@ class detail_product_view(DetailView):
         else:
             context['user_review'] = None
             context['seller_review'] = None
+
+        if self.request.user.is_authenticated:
+            is_favorite = Favourite.objects.filter(user=self.request.user, product=self.object).exists()
+            context['is_favorite'] = is_favorite
+        else:
+            context['is_favorite'] = False
 
         return context
 

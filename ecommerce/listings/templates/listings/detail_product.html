@@ -77,9 +77,21 @@
                     <button class="btn button-prefer mb-2 w-100">
                         <i class="fas fa-shopping-cart"></i> Aggiungi al carrello
                     </button>
-                    <button class="btn button-prefer w-100" id="heart-button" onclick="toggleFavorite()">
-                        <i class="far fa-heart" id="heart-icon"></i> Aggiungi ai preferiti
-                    </button>
+
+                    {% if user.is_authenticated %}
+
+                        <button class="btn button-prefer w-100" id="heart-button" onclick="toggleFavorite({{ product.pk }})">
+                            <i class="{% if is_favorite %}fas{% else %}far{% endif %} fa-heart" id="heart-icon"></i> Aggiungi ai preferiti
+                        </button>
+
+                    {% else %}
+
+                        <a href="{% url 'users:login' %}" class="btn button-prefer w-100" id="heart-button" style="text-decoration: none; color: inherit;">
+                            <i class="far fa-heart" id="heart-icon"></i> Aggiungi ai preferiti
+                        </a>
+
+                    {% endif %}
+
                 </div>
 
             </div>
@@ -137,7 +149,7 @@
                 {% else %}
                     {% for r in product.reviews.all %}
                         <div class="review mb-3">
-                            <p class="fw-bold">{{ r.user.username }}</p>
+                            <p class="fw-bold">{{ r.reg_user.user.username }}</p>
                             <div class="d-flex align-items-center">
                                 <!-- Stars -->
                                 <div class="d-flex align-items-center me-2"> <!-- To see stars next -->
