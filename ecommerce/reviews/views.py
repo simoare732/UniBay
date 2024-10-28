@@ -198,8 +198,12 @@ class delete_seller_review_view(DeleteView):
 class list_seller_review_view(ListView):
     model = Seller_Review
     template_name = 'reviews/list_seller_review.html'
-    ordering = ['-date']
+    #ordering = ['-date']
     paginate_by = 10
+
+    def get_queryset(self):
+        seller_pk = self.kwargs.get('pk')
+        return Seller_Review.objects.filter(seller=Seller.objects.get(pk=seller_pk)).order_by('-date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -224,8 +228,11 @@ class list_seller_review_view(ListView):
 class list_user_review_view(ListView):
     model = Review
     template_name = 'reviews/list_user_review.html'
-    ordering = ['-date']
+    #ordering = ['-date']
     paginate_by = 10
+
+    def get_queryset(self):
+        return Review.objects.filter(reg_user=self.request.user.registered_user).order_by('-date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -239,8 +246,11 @@ class list_user_review_view(ListView):
 class list_user_seller_review_view(ListView):
     model = Seller_Review
     template_name = 'reviews/list_user_seller_review.html'
-    ordering = ['-date']
+    #ordering = ['-date']
     paginate_by = 10
+
+    def get_queryset(self):
+        return Seller_Review.objects.filter(reg_user=self.request.user.registered_user).order_by('-date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

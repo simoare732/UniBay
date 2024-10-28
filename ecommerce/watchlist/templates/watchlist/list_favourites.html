@@ -1,0 +1,72 @@
+{% extends 'base_pages.html' %}
+{% load static %}
+
+{% block title %}List of favourites{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/image.css' %}">
+    <link rel="stylesheet" href="{% static 'css/star.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="description w-100 d-flex justify-content-between align-items-center p-2">
+            <h1 class="display-4">I tuoi preferiti</h1>
+        </div>
+        <hr>
+
+        <div class="row">
+            {% for item in object_list %}
+                <div class="col-md-12 mb-4" id="favorite-item-{{ item.pk }}">
+                    <div class="card">
+
+                        <div class="col-md-7 row mb-3">
+                            <div class="col-md-3">
+                                <div class="image-container" style="border: 1px solid #ddd;">
+                                    <a href="{% url 'listings:detail_product' item.product.pk %}" target="_blank">
+                                        <img src="{{ item.product.image1.url }}" alt="{{ item.product.name }}" class="img-fluid">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <h4>
+                                    <a href="{% url 'listings:detail_product' item.product.pk %}" style="text-decoration: none; color: inherit;" target="_blank">{{ item.product.title }}</a>
+                                </h4>
+                                <p class="text-muted">Venditore: {{ item.product.seller.user.username }}</p>
+                            </div>
+                            <div class="my-1 mx-2 d-flex align-items-center"> <!-- Flexbox per allineamento -->
+                                <!-- Stelle -->
+                                <div class="d-flex align-items-center me-2"> <!-- Flexbox per le stelle -->
+                                    {% with item.product.average_rating as avg_rating %}
+                                        {% for i in "12345" %}
+                                            {% if avg_rating >= forloop.counter %}
+                                                <i class="fas fa-star mini-star"></i> <!-- full star -->
+                                            {% elif avg_rating >= forloop.counter|add:"-0.5" %}
+                                                <i class="fas fa-star-half-alt mini-star"></i> <!-- half star -->
+                                            {% else %}
+                                                <i class="far fa-star mini-star"></i> <!-- empty star -->
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                </div>
+                                <p class="mb-0">{{ item.product.average_rating }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="my-2">
+                        <button class="btn btn-outline-danger" id="remove-button" onclick="removeFavorite({{ item.pk }})">Rimuovi</button>
+                    </div>
+
+                    <hr>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="{% static 'js/favourite.js' %}"></script>
+
+    {% include 'footer.html' %}
+
+{% endblock %}

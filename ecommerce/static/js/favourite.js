@@ -33,3 +33,29 @@ function toggleFavorite(productId) {
         // In case of any error, log the error to the console
     .catch(error => console.error('Errore:', error));
 }
+
+
+function removeFavorite(favoriteId) {
+    fetch(`/watchlist/remove_favorite/${favoriteId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value  // CSRF token
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Update the UI to remove the favorite item
+            document.getElementById(`favorite-item-${favoriteId}`).remove();
+        } else {
+            console.error('Failed to remove favorite:', data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+

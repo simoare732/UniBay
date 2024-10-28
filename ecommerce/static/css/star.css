@@ -19,3 +19,12 @@
 .star-icons i:hover {
     color: #FFC107;
 }
+
+.star{
+    font-size: 2rem;
+    color: #FFD700;
+}
+
+.mini-star{
+    color: #FFD700;
+}
