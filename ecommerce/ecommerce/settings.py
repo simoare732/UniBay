@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'listings',
     'reviews',
     'watchlist',
+    'report',
 ]
 
 MIDDLEWARE = [

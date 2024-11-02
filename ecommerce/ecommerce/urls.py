@@ -29,6 +29,7 @@ urlpatterns = [
     path('listings/', include('listings.urls')),
     path('reviews/', include('reviews.urls')),
     path('watchlist/', include('watchlist.urls')),
+    path('report/', include('report.urls')),
 ]
 
 if settings.DEBUG:
