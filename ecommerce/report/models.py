@@ -15,4 +15,8 @@ class Report(models.Model):
     date = models.DateTimeField(auto_now_add=True, editable=False, null=True)
 
     def __str__(self):
-        return f'Report by {self.reporter.user.username} - {self.seller.user.username}'
+        return f'Report di {self.reporter.user.username} verso {self.seller.user.username}'
+
+    # Get the reason of the report in extense form
+    def get_reason(self):
+        return dict(self.reason_choices)[self.reason]
