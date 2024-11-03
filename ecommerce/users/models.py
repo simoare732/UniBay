@@ -7,7 +7,6 @@ class User(AbstractUser):
 
 class Registered_User(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    email = models.EmailField()
     phone = models.CharField(max_length=20)
 
     def __str__(self):
@@ -15,7 +14,6 @@ class Registered_User(models.Model):
 
 class Seller(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    email = models.EmailField()
     phone = models.CharField(max_length=20)
     PIVA = models.CharField(max_length=15)
 

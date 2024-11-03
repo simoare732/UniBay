@@ -12,7 +12,7 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Info personali</h5> <br>
-                        <p class="card-text"><strong>Email:</strong> {{ object.email }}</p>
+                        <p class="card-text"><strong>Email:</strong> {{ object.user.email }}</p>
                         <p class="card-text"><strong>Phone number:</strong> {{ object.phone }}</p>
                         <p class="card-text"><strong>Iscritto in data:</strong> {{ object.user.date_joined }}</p>
                         <a href="{% url 'users:update_profile_user' object.pk %}" class="btn btn-light">Modifica</a>
