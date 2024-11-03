@@ -1,5 +1,5 @@
 from django import forms
-from .models import Report
+from .models import Report, Strike
 
 class report_create_form(forms.ModelForm):
     reason = forms.ChoiceField(
@@ -16,3 +16,14 @@ class report_create_form(forms.ModelForm):
     class Meta:
         model = Report
         fields = ['reason', 'description']
+
+
+class strike_create_form(forms.ModelForm):
+    description = forms.CharField(
+        label='Motivo',
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Strike dovuto a...'}),
+    )
+
+    class Meta:
+        model = Strike
+        fields = ['description']

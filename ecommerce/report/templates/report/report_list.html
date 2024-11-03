@@ -17,7 +17,7 @@
                     </div>
 
                     <div>
-                        <a href="#" class="btn btn-outline-primary">Invia strike</a>
+                        <a href="{% url 'report:create_strike' report.seller.pk %}" class="btn btn-outline-primary">Invia strike</a>
                         <a href="{% url 'report:delete_report' report.pk %}" class="btn btn-outline-danger">Elimina</a>
                     </div>
 
@@ -26,4 +26,6 @@
             </div>
         </div>
     </div>
+
+    {% include 'footer.html' %}
 {% endblock %}

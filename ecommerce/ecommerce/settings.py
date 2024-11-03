@@ -142,3 +142,11 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 AUTH_USER_MODEL = 'users.User'
 
 LOGIN_REDIRECT_URL = "/?login=ok"  # redireziona alla home
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'simoaresta3@gmail.com'     # Il tuo indirizzo Gmail
+EMAIL_HOST_PASSWORD = 'gjrr nofd lrxl efff'

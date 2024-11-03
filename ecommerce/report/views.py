@@ -1,12 +1,12 @@
-from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, ListView, DeleteView
 
-from .models import Report
+from .models import Report, Strike
 from users.models import Seller
 from listings.models import Product, Category
-from .forms import report_create_form
+from .forms import report_create_form, strike_create_form
 from django.contrib.auth.mixins import UserPassesTestMixin
 
 
@@ -71,3 +71,41 @@ class report_delete_view(UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('report:list_reports')
+
+
+class strike_create_view(UserPassesTestMixin, CreateView):
+    model = Strike
+    form_class = strike_create_form
+    template_name = 'report/strike_create.html'
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def form_valid(self, form):
+        # Get the seller id from the URL
+        seller_pk = self.kwargs['seller_pk']
+        seller = get_object_or_404(Seller, id=seller_pk)
+
+        # Assign the seller to the strike
+        form.instance.seller = seller
+        response = super().form_valid(form)
+
+        # Check if the seller has received three strikes, if yes
+        if seller.strikes.count() >= 3:
+            # Email the seller
+            send_mail(
+                'Account sospeso',
+                'Il tuo account è stato sospeso a causa di tre strike ricevuti.',
+                'simoaresta3@gmail.com',
+                [seller.email],
+                fail_silently=False,
+            )
+
+            # Delete the seller
+            seller.user.delete()
+
+        return response
+
+    def get_success_url(self):
+        return reverse('report:list_reports')
+

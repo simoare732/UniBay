@@ -1,20 +1,19 @@
 {% extends 'base.html' %}
 
-{% block title %}Report page{% endblock %}
+{% block title %}Create strike{% endblock %}
 
 {% block content %}
     {% include 'head.html' %}
 
     <div class="container">
-        <h1>Segnala {{ seller.user.username }}</h1>
+        <h1>Strike per {{ seller.user.username }}</h1>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <button class="btn btn-danger" type="submit">Invia</button>
-            <a class="btn btn-secondary" href="{% url 'listings:detail_product' product.pk %}">Indietro</a>
+            <a class="btn btn-secondary" href="{% url 'report:list_reports' %}">Indietro</a>
         </form>
     </div>
 
     {% include 'footer.html' %}
-
 {% endblock %}

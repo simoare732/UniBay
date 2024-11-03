@@ -78,6 +78,14 @@ class detail_product_view(DetailView):
                 context['seller_review'] = seller_review.pk
             else:
                 context['seller_review'] = None
+
+            # This is used to check if the user has already reported the seller
+            report = self.request.user.registered_user.reports.filter(seller=self.object.seller).first()
+            if report:
+                context['report'] = report.pk
+            else:
+                context['report'] = None
+
         else:
             context['user_review'] = None
             context['seller_review'] = None
