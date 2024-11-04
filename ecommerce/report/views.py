@@ -97,12 +97,21 @@ class strike_create_view(UserPassesTestMixin, CreateView):
                 'Account sospeso',
                 'Il tuo account è stato sospeso a causa di tre strike ricevuti.',
                 'simoaresta3@gmail.com',
-                [seller.email],
+                [seller.user.email],
                 fail_silently=False,
             )
 
             # Delete the seller
             seller.user.delete()
+        else:
+            # Email the seller
+            send_mail(
+                'Strike ricevuto',
+                f'Attenzione. Hai ricevuto uno strike.\nDescrizione: {form.instance.description}',
+                'simoaresta3@gmail.com',
+                [seller.user.email],
+                fail_silently=False,
+            )
 
         return response
 

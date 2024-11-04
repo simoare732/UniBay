@@ -53,7 +53,7 @@
                             {% for i in "12345" %}
                                 {% if avg_rating >= forloop.counter %}
                                     <i class="fas fa-star mini-star"></i> <!-- full star -->
-                                {% elif avg_rating >= forloop.counter|add:"-0.5" %}
+                                {% elif avg_rating < forloop.counter and avg_rating > forloop.counter|add:"-1" %}
                                     <i class="fas fa-star-half-alt mini-star"></i> <!-- half star -->
                                 {% else %}
                                     <i class="far fa-star mini-star"></i> <!-- empty star -->
@@ -135,7 +135,7 @@
                         {% for i in "12345" %}
                             {% if avg_rating >= forloop.counter %}
                                 <i class="fas fa-star star"></i> <!-- full star -->
-                            {% elif avg_rating >= forloop.counter|add:"-0.5" %}
+                            {% elif avg_rating < forloop.counter and avg_rating > forloop.counter|add:"-1" %}
                                 <i class="fas fa-star-half-alt star"></i> <!-- half star -->
                             {% else %}
                                 <i class="far fa-star star"></i> <!-- empty star -->

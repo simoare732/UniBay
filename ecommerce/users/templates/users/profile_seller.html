@@ -29,6 +29,9 @@
                         <a href="{% url 'reviews:list_seller_review' object.pk %}" class="btn custom-button-reg">Visualizza recensioni</a>
                     </div>
                 </div>
+                {% if object.strikes.count > 0 %}
+                    <p class="text-muted">Attenzione: hai {{ object.strikes.count }} strikes</p>
+                {% endif %}
             </div>
         </div>
     </div>

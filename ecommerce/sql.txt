@@ -18,7 +18,6 @@ INSERT INTO listings_category (name) VALUES
 ('Illuminazione'),
 ('Industria e Scienza'),
 ('Informatica'),
-('Iscriviti e Risparmia'),
 ('Kindle Store'),
 ('Libri'),
 ('Luxury Stores'),

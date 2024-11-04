@@ -19,3 +19,9 @@ class Seller(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def delete(self, *args, **kwargs):
+        # Elimina tutti i prodotti associati
+        for product in self.products.all():
+            product.delete()
+        super().delete(*args, **kwargs)

@@ -129,6 +129,7 @@ class seller_update_form(forms.ModelForm):
         instance = super().save(commit=False)
         # Aggiorna l'username dell'utente collegato
         instance.user.username = self.cleaned_data['username']
+        instance.user.email = self.cleaned_data['email']
         if commit:
             instance.user.save()
             instance.save()
@@ -163,6 +164,7 @@ class user_update_form(forms.ModelForm):
         instance = super().save(commit=False)
         # Aggiorna l'username dell'utente collegato
         instance.user.username = self.cleaned_data['username']
+        instance.user.email = self.cleaned_data['email']
         if commit:
             instance.user.save()
             instance.save()
@@ -190,6 +192,7 @@ class admin_update_form(forms.ModelForm):
         instance = super().save(commit=False)
         # Aggiorna l'username dell'utente collegato
         instance.username = self.cleaned_data['username']
+        instance.user.email = self.cleaned_data['email']
         if commit:
             instance.save()
         return instance
