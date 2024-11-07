@@ -4,7 +4,7 @@ from django.views.generic import CreateView, DetailView, UpdateView
 from django.contrib.auth import login
 from .forms import *
 from listings.models import Category
-
+from .mixins import *
 
 def home_signup(request):
     return render(request, 'users/home_signup.html')
@@ -44,7 +44,7 @@ class Seller_Signup_View(CreateView):
 
 
 # to show information of a user/seller
-class detail_profile_user(DetailView):
+class detail_profile_user(registered_user_required_mixin, DetailView):
     model = Registered_User
     template_name = 'users/profile_user.html'
 
@@ -53,7 +53,7 @@ class detail_profile_user(DetailView):
         ctx['categories'] = Category.objects.all()
         return ctx
 
-class detail_profile_seller(DetailView):
+class detail_profile_seller(seller_required_mixin, DetailView):
     model = Seller
     template_name = 'users/profile_seller.html'
 
@@ -62,7 +62,7 @@ class detail_profile_seller(DetailView):
         ctx['categories'] = Category.objects.all()
         return ctx
 
-class detail_profile_admin(DetailView):
+class detail_profile_admin(admin_required_mixin, DetailView):
     model = User
     template_name = 'users/profile_admin.html'
 
@@ -72,7 +72,7 @@ class detail_profile_admin(DetailView):
         return ctx
 
 
-class update_profile_user(UpdateView):
+class update_profile_user(registered_user_required_mixin, UpdateView):
     model = Registered_User
     form_class = user_update_form
     template_name = 'users/update_profile_user.html'
@@ -81,7 +81,7 @@ class update_profile_user(UpdateView):
         pk = self.get_context_data()['object'].pk
         return reverse('users:profile_user', kwargs={'pk': pk})
 
-class update_profile_seller(UpdateView):
+class update_profile_seller(seller_required_mixin, UpdateView):
     model = Seller
     form_class = seller_update_form
     #fields = '__all__'
@@ -92,7 +92,7 @@ class update_profile_seller(UpdateView):
         pk = self.get_context_data()['object'].pk
         return reverse('users:profile_seller', kwargs={'pk': pk})
 
-class update_profile_admin(UpdateView):
+class update_profile_admin(admin_required_mixin, UpdateView):
     model = User
     form_class = admin_update_form
     template_name = 'users/update_profile_admin.html'

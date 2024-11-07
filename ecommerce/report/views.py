@@ -1,7 +1,8 @@
 from django.core.mail import send_mail
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse, reverse_lazy
+from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse
 from django.views.generic import CreateView, ListView, DeleteView
+from users.mixins import admin_required_mixin
 
 from .models import Report, Strike
 from users.models import Seller
@@ -33,20 +34,11 @@ class report_create_view(CreateView):
 
 
 
-class report_list_view(UserPassesTestMixin, ListView):
+class report_list_view(admin_required_mixin, ListView):
     model = Report
     template_name = 'report/report_list.html'
     ordering = ['-date']
 
-
-    def test_func(self):
-        # Check if the user is staff or superuser
-        return self.request.user.is_staff or self.request.user.is_superuser
-
-    def handle_no_permission(self):
-        # If the user is not staff or superuser, redirect to the home page
-        #messages.error(self.request, "Non hai i permessi per accedere a questa pagina.")
-        return redirect('pages:home_page')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -56,30 +48,18 @@ class report_list_view(UserPassesTestMixin, ListView):
         return context
 
 
-class report_delete_view(UserPassesTestMixin, DeleteView):
+class report_delete_view(admin_required_mixin, DeleteView):
     model = Report
     template_name = 'report/report_delete.html'
-
-    def test_func(self):
-        # Check if the user is staff or superuser
-        return self.request.user.is_staff or self.request.user.is_superuser
-
-    def handle_no_permission(self):
-        # If the user is not staff or superuser, redirect to the home page
-        #messages.error(self.request, "Non hai i permessi per accedere a questa pagina.")
-        return redirect('pages:home_page')
 
     def get_success_url(self):
         return reverse('report:list_reports')
 
 
-class strike_create_view(UserPassesTestMixin, CreateView):
+class strike_create_view(admin_required_mixin, CreateView):
     model = Strike
     form_class = strike_create_form
     template_name = 'report/strike_create.html'
-
-    def test_func(self):
-        return self.request.user.is_superuser
 
     def form_valid(self, form):
         # Get the seller id from the URL

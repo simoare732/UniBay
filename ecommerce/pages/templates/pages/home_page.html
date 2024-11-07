@@ -45,7 +45,12 @@
     <h2 class="mt-5 border-margin">Se hai da vendere</h2>
 
     <div class="mt-4 text-center border-margin">
-        <a href="{% url 'users:seller_signup' %}" class="btn button-sell btn-lg w-100">Vendi su UniBay</a>
+        {% if user.is_authenticated and user.is_seller %}
+            <a href="{% url 'listings:create_product' %}" class="btn button-sell btn-lg w-100">Vendi su UniBay</a>
+        {% else %}
+            <a href="{% url 'users:seller_signup' %}" class="btn button-sell btn-lg w-100">Vendi su UniBay</a>
+        {% endif %}
+
     </div>
 
     {% include 'footer.html' %}
