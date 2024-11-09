@@ -1,0 +1,68 @@
+{% extends 'base_pages.html' %}
+{% load static %}
+
+{% block title %}List items in cart {% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/image.css' %}">
+    <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <!-- Colonna sinistra: Titolo e elementi del carrello -->
+            <div class="col-md-8 my-2">
+                <h2>Carrello</h2>
+                <hr>
+                {% if cart.total_items == 0 %}
+                    <p>Il carrello è vuoto</p>
+                {% else %}
+                    {% for item in cart.items.all %}
+                        <div id="cart-item-{{ item.pk }}" class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="image-container" style="border: 1px solid #ddd;">
+                                    <a href="{% url 'listings:detail_product' item.product.pk %}" target="_blank">
+                                        <img src="{{ item.product.image1.url }}" alt="{{ item.product.title }}" class="img-fluid">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <h5 class="product-title">
+                                    <a href="{% url 'listings:detail_product' item.product.pk %}" style="text-decoration: none; color: inherit;" target="_blank">{{ item.product.title }}</a>
+                                </h5>
+                                <p class="text-muted">Venditore: {{ item.product.seller }}</p>
+                                <h4>EUR: {{ item.product.price }}</h4>
+                                <div class="quantity-controls d-flex align-items-center mt-2">
+                                    <p class="d-inline me-2">Quantità:</p>
+                                    <button class="btn btn-light btn-sm" onclick="updateQuantity({{ item.pk }}, 'decrement')">-</button>
+                                    <span id="quantity-{{ item.pk }}" class="mx-2">{{ item.quantity }}</span>
+                                    <button class="btn btn-light btn-sm" onclick="updateQuantity({{ item.pk }}, 'increment')">+</button>
+                                    <p class="text-muted">Disponibile: {{ item.product.quantity }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="mb-3">
+                    {% endfor %}
+                    <h5 class="d-flex justify-content-lg-end">
+                        Totale (<span id="total-items">{{ cart.total_items }}</span>&nbsp; articoli): EUR&nbsp;
+                        <span id="total-price-summary">{{ cart.total_price }}</span></h5>
+                {% endif %}
+            </div>
+
+            <!-- Colonna destra: Pulsante "Procedi all'ordine" in un riquadro bianco -->
+            <div class="col-md-4 d-flex justify-content-center align-items-start mt-5">
+                <div class="card w-100 p-3" style="background-color: #f8f9fa;">
+                    <h5 class="mb-3">Totale: <br> EUR
+                        <span id="total-price">{{ cart.total_price }}</span></h5>
+                    <button class="btn button-cart w-100">Procedi all'ordine</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/shopping.js' %}"></script>
+
+    {% include 'footer.html' %}
+
+{% endblock %}

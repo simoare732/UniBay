@@ -16,6 +16,7 @@ def toggle_favorite(request, product_id):
     product = Product.objects.get(id=product_id)
     favorite, created = Favourite.objects.get_or_create(user=user, product=product)
 
+    # Created is True if the object was created, False if it already existed
     if not created:
         favorite.delete()
         is_favorite = False
@@ -48,7 +49,6 @@ class list_favourites(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         # To get all the Categories for search bar
         context['categories'] = Category.objects.all()
-
 
         return context
 
