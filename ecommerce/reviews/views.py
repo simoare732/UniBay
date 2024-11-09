@@ -1,12 +1,14 @@
+from django.http import Http404
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 
 from listings.models import Product, Category
 from users.models import Seller
-from .models import Review, Seller_Review
+from users.mixins import reguser_general_mixin, review_owner_mixin
 from .forms import *
 
-class create_review_view(CreateView):
+class create_review_view(reguser_general_mixin, CreateView):
     model = Review
     template_name = 'reviews/create_review.html'
     form_class = review_create_form
@@ -29,7 +31,7 @@ class create_review_view(CreateView):
         return reverse('listings:detail_product', kwargs={'pk': self.kwargs['pk']})
 
 
-class update_review_view(UpdateView):
+class update_review_view(review_owner_mixin, UpdateView):
     model = Review
     template_name = 'reviews/update_review.html'
     form_class = review_create_form
@@ -59,7 +61,7 @@ class update_review_view(UpdateView):
         return reverse('listings:detail_product', kwargs={'pk': review.product.pk})
 
 
-class delete_review_view(DeleteView):
+class delete_review_view(review_owner_mixin, DeleteView):
     model = Review
     template_name = 'reviews/delete_review.html'
 
@@ -85,7 +87,7 @@ class delete_review_view(DeleteView):
 
 
 
-class create_seller_review_view(CreateView):
+class create_seller_review_view(reguser_general_mixin, CreateView):
     model = Seller_Review
     template_name = 'reviews/create_seller_review.html'
     form_class = seller_review_create_form
@@ -120,7 +122,7 @@ class create_seller_review_view(CreateView):
             return reverse('pages:home_page')
 
 
-class update_seller_review_view(UpdateView):
+class update_seller_review_view(review_owner_mixin ,UpdateView):
     model = Seller_Review
     template_name = 'reviews/update_seller_review.html'
     form_class = seller_review_create_form
@@ -160,7 +162,7 @@ class update_seller_review_view(UpdateView):
             return reverse('pages:home_page')
 
 
-class delete_seller_review_view(DeleteView):
+class delete_seller_review_view(review_owner_mixin ,DeleteView):
     model = Seller_Review
     template_name = 'reviews/delete_seller_review.html'
 
@@ -198,7 +200,6 @@ class delete_seller_review_view(DeleteView):
 class list_seller_review_view(ListView):
     model = Seller_Review
     template_name = 'reviews/list_seller_review.html'
-    #ordering = ['-date']
     paginate_by = 10
 
     def get_queryset(self):
@@ -215,7 +216,7 @@ class list_seller_review_view(ListView):
 
         context['seller_reviews'] = Seller_Review.objects.filter(seller=context['seller'])
 
-        # Recupera il product_pk dai query parameters
+        # Take the product_pk from the query parameters
         product_pk = self.request.GET.get('product_pk')
         if product_pk:
             context['product'] = product_pk
@@ -225,10 +226,9 @@ class list_seller_review_view(ListView):
         return context
 
 
-class list_user_review_view(ListView):
+class list_user_review_view(reguser_general_mixin ,ListView):
     model = Review
     template_name = 'reviews/list_user_review.html'
-    #ordering = ['-date']
     paginate_by = 10
 
     def get_queryset(self):
@@ -243,7 +243,7 @@ class list_user_review_view(ListView):
         return context
 
 
-class list_user_seller_review_view(ListView):
+class list_user_seller_review_view(reguser_general_mixin ,ListView):
     model = Seller_Review
     template_name = 'reviews/list_user_seller_review.html'
     #ordering = ['-date']

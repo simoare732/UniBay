@@ -44,7 +44,7 @@ class Seller_Signup_View(CreateView):
 
 
 # to show information of a user/seller
-class detail_profile_user(registered_user_required_mixin, DetailView):
+class detail_profile_user(reguser_required_mixin, DetailView):
     model = Registered_User
     template_name = 'users/profile_user.html'
 
@@ -72,7 +72,7 @@ class detail_profile_admin(admin_required_mixin, DetailView):
         return ctx
 
 
-class update_profile_user(registered_user_required_mixin, UpdateView):
+class update_profile_user(reguser_required_mixin, UpdateView):
     model = Registered_User
     form_class = user_update_form
     template_name = 'users/update_profile_user.html'

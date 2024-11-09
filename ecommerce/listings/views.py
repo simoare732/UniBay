@@ -1,14 +1,12 @@
-from django.http import request
-from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, DeleteView, DetailView, UpdateView
 
 from watchlist.models import Favourite
 from .models import *
 from .forms import product_create_form
+from users.mixins import seller_general_mixin, product_owner_mixin
 
-
-class create_product_view(CreateView):
+class create_product_view(seller_general_mixin, CreateView):
     model = Product
     template_name = 'listings/create_product.html'
     #fields = '__all__'
@@ -29,7 +27,7 @@ class create_product_view(CreateView):
         return context
 
 
-class list_products_view(ListView):
+class list_products_view(seller_general_mixin, ListView):
     model = Product
     template_name = 'listings/list_products.html'
     ordering = ['-date']
@@ -43,7 +41,7 @@ class list_products_view(ListView):
         return ctx
 
 
-class delete_product_view(DeleteView):
+class delete_product_view(product_owner_mixin, DeleteView):
     model = Product
     template_name = 'listings/delete_product.html'
 
@@ -98,7 +96,7 @@ class detail_product_view(DetailView):
 
         return context
 
-class update_product_view(UpdateView):
+class update_product_view(product_owner_mixin, UpdateView):
     #BUG: even if there are images for a product, the form for the images shows 'No file chosen'. If you press 'Modifica'
     # the images there are.
     model = Product

@@ -2,16 +2,14 @@ from django.core.mail import send_mail
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.views.generic import CreateView, ListView, DeleteView
-from users.mixins import admin_required_mixin
+from users.mixins import admin_required_mixin, reguser_general_mixin
 
 from .models import Report, Strike
 from users.models import Seller
 from listings.models import Product, Category
 from .forms import report_create_form, strike_create_form
-from django.contrib.auth.mixins import UserPassesTestMixin
 
-
-class report_create_view(CreateView):
+class report_create_view(reguser_general_mixin, CreateView):
     model = Report
     form_class = report_create_form
     template_name = 'report/report_create.html'

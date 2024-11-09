@@ -12,7 +12,7 @@
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-success btn-block">Modifica</button>
-                <a class="btn btn-secondary" href="{% url 'users:profile_seller' seller.pk %}">Profilo</a>
+                <a class="btn btn-secondary" href="{% url 'users:profile_seller' seller.pk %}">Annulla</a>
             </form>
         </div>
     </div>
