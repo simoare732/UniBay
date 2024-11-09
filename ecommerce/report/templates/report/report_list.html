@@ -22,9 +22,13 @@
                         </div>
                     </div>
 
-                    <div>
-                        <a href="{% url 'report:create_strike' report.seller.pk %}" class="btn btn-outline-danger">Invia strike</a>
-                        <a href="{% url 'report:mark_report_seen' report.pk %}" class="btn btn-outline-secondary">Visto</a>
+                    <div class="d-flex">
+                        <a href="{% url 'report:create_strike' report.seller.pk %}" class="btn btn-outline-danger me-2">Invia strike</a>
+
+                        <form method="POST" action="{% url 'report:mark_report_seen' report_pk=report.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-secondary">Visto</button>
+                        </form>
                     </div>
 
                     <hr>

@@ -1,6 +1,7 @@
 from django.core.mail import send_mail
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, ListView, DeleteView
 from users.mixins import admin_required_mixin, reguser_general_mixin
 
@@ -54,13 +55,13 @@ class report_list_view(admin_required_mixin, ListView):
 #
 #     def get_success_url(self):
 #         return reverse('report:list_reports')
-
+@require_POST
 def mark_report_seen(request, report_pk):
     report = get_object_or_404(Report, pk = report_pk)
 
     report.set_seen()
 
-    # Dopo aver aggiornato il report, reindirizza alla lista dei report
+    # After marking the report as seen, redirect to the list of reports
     return redirect('report:list_reports')
 
 class strike_create_view(admin_required_mixin, CreateView):
