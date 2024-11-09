@@ -35,8 +35,10 @@ class report_create_view(reguser_general_mixin, CreateView):
 class report_list_view(admin_required_mixin, ListView):
     model = Report
     template_name = 'report/report_list.html'
-    ordering = ['-date']
+    #ordering = ['-date']
 
+    def get_queryset(self):
+        return Report.objects.filter(seen=False).order_by('-date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -46,13 +48,20 @@ class report_list_view(admin_required_mixin, ListView):
         return context
 
 
-class report_delete_view(admin_required_mixin, DeleteView):
-    model = Report
-    template_name = 'report/report_delete.html'
+# class report_delete_view(admin_required_mixin, DeleteView):
+#     model = Report
+#     template_name = 'report/report_delete.html'
+#
+#     def get_success_url(self):
+#         return reverse('report:list_reports')
 
-    def get_success_url(self):
-        return reverse('report:list_reports')
+def mark_report_seen(request, report_pk):
+    report = get_object_or_404(Report, pk = report_pk)
 
+    report.set_seen()
+
+    # Dopo aver aggiornato il report, reindirizza alla lista dei report
+    return redirect('report:list_reports')
 
 class strike_create_view(admin_required_mixin, CreateView):
     model = Strike
@@ -60,6 +69,7 @@ class strike_create_view(admin_required_mixin, CreateView):
     template_name = 'report/strike_create.html'
 
     def form_valid(self, form):
+
         # Get the seller id from the URL
         seller_pk = self.kwargs['seller_pk']
         seller = get_object_or_404(Seller, id=seller_pk)
