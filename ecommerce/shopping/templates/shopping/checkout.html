@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Checkout{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% include 'head.html' %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 my-2">
+                <h2>Riepilogo dell'ordine</h2>
+                <hr>
+                <div class="card">
+                    <div class="card-body">
+                        {% for item in items %}
+                            <div class="mb-3 my-2">
+                                <div class="d-flex align-items-center mb-3 mx-2">
+                                    <img src="{{ item.product.image1.url }}" alt="Product Image 1" class="img-thumbnail" style="width: 100px; height: 100px; margin-right: 10px;">
+                                    <div>
+                                        <h4>{{ item.product.title }}</h4>
+                                        <p>Quantità: {{ item.quantity }}</p>
+                                        <h5>EUR {{ item.total_price }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                <div class="card my-2   ">
+                    <div class="card-body">
+                        <h4>Dettagli di spedizione e pagamento</h4>
+                        <form id="checkout-form" method="post" novalidate>
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                        </form>
+                        {% if error %}
+                            <p class="text-danger mt-2">{{ error }}</p>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4 d-flex justify-content-center align-items-start mt-5">
+                <div class="card w-100 p-3" style="background-color: #f8f9fa;">
+                    <h5 class="mb-3">Totale: <br> EUR
+                        <span id="total-price">{{ total_price }}</span></h5>
+                    <button class="btn button-cart w-100" onclick="document.getElementById('checkout-form').submit();">
+                        Conferma e paga
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+    {% include 'footer.html' %}
+{% endblock %}

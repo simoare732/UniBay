@@ -73,7 +73,9 @@
                 </div>
 
                 <div class="d-flex flex-column w-100 mt-3">
-                    <button class="btn button-cart mb-2 w-100">Compra subito</button>
+                    <button class="btn button-cart mb-2 w-100" onclick="window.location.href='{% url 'shopping:checkout' %}?product_id={{ product.id }}'">
+                        Compra subito
+                    </button>
 
                     <button class="btn button-prefer mb-2 w-100" onclick="addToCart({{ product.pk }})">
                         <i class="fas fa-shopping-cart"></i> Aggiungi al carrello
