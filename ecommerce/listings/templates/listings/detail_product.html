@@ -74,7 +74,8 @@
 
                 <div class="d-flex flex-column w-100 mt-3">
                     <button class="btn button-cart mb-2 w-100">Compra subito</button>
-                    <button class="btn button-prefer mb-2 w-100">
+
+                    <button class="btn button-prefer mb-2 w-100" onclick="addToCart({{ product.pk }})">
                         <i class="fas fa-shopping-cart"></i> Aggiungi al carrello
                     </button>
 
@@ -225,6 +226,7 @@
     </div>
 
     <script src="{% static 'js/favourite.js' %}"></script>
+    <script src="{% static 'js/shopping.js' %}"></script>
 
     {% include 'footer.html' %}
 {% endblock %}

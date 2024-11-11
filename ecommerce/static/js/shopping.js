@@ -13,12 +13,10 @@ function updateQuantity(itemPk, action){
             alert(data.error);
         } else {
             if(data.quantity == 0){
-                console.log('Sono in quantity 0 '+ data.quantity)
                 document.getElementById(`cart-item-${itemPk}`).remove();
                 document.getElementById(`hr-${itemPk}`).remove();
             }
             else{
-                console.log('Sono in quantity diverso da 0 '+ data.quantity)
                 document.getElementById(`quantity-${itemPk}`).innerText = data.quantity;
             }
             // Aggiorna la quantità e il prezzo totale nel template
@@ -29,4 +27,28 @@ function updateQuantity(itemPk, action){
         }
     })
     .catch(error => console.error('Error:', error));
+}
+
+
+function addToCart(productId){
+    const quantity = document.getElementById('quantity').value;
+
+    fetch(`/shopping/add_to_cart/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // Assicurati di avere il CSRF token
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ quantity: quantity })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert(data.message);  // Mostra un messaggio di successo
+            document.getElementById(`small-quantity`).innerText = data.total_items;
+        } else {
+            alert('Errore durante l\'aggiunta al carrello');
+        }
+    })
+    .catch(error => console.error('Errore:', error));
 }

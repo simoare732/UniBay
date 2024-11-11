@@ -39,6 +39,11 @@
                                     <span id="quantity-{{ item.pk }}" class="mx-2">{{ item.quantity }}</span>
                                     <button class="btn btn-light btn-sm" onclick="updateQuantity({{ item.pk }}, 'increment')">+</button>
                                     <p class="text-muted">Disponibile: {{ item.product.quantity }}</p>
+                                    <div class="ms-auto">
+                                        <button class="btn btn-outline-danger btn-sm" onclick="updateQuantity({{ item.pk }}, 'delete')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

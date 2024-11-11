@@ -8,16 +8,32 @@ from django.views.generic import ListView
 from listings.models import Category
 from .models import *
 
-def add_to_cart(request, product_id, quantity):
-    user = request.user
-    product = Product.objects.get(id=product_id)
-    cart, created = Cart.objects.get_or_create(user=user)
-    cart_item, created = Cart_Item.objects.get_or_create(cart=cart, product=product)
+def add_to_cart(request, product_id):
+    try:
+        user = request.user
+        product = Product.objects.get(id=product_id)
 
-    # Created is True if the object was created, False if it already existed
-    if not created:
-        cart_item.inc_quantity(quantity)
+        data = json.loads(request.body)
+        quantity = int(data.get('quantity'))
 
+        cart, created = Cart.objects.get_or_create(user=user)
+        cart_item, created = Cart_Item.objects.get_or_create(cart=cart, product=product)
+
+        # Created is True if the object was created, False if it already existed
+        if not created:
+            cart_item.inc_quantity(quantity)
+        else:
+            cart_item.quantity = quantity
+            cart_item.save()
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Prodotto aggiunto al carrello!',
+            'total_items': cart.total_items(),
+        })
+
+    except Cart.DoesNotExist:
+        return JsonResponse({'error': 'Cart not found'}, status=404)
 
 
 class list_cart(ListView):
@@ -45,7 +61,7 @@ def update_cart_item_quantity(request, item_pk):
             item.inc_quantity(1)
         elif action == "decrement" and item.quantity > 1:
             item.inc_quantity(-1)
-        elif action == "decrement" and item.quantity == 1:
+        elif (action == "decrement" and item.quantity == 1) or action == "delete":
             item.delete()
             return JsonResponse({
                 'quantity': 0,
