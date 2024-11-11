@@ -12,10 +12,13 @@ function updateQuantity(itemPk, action){
         if (data.error) {
             alert(data.error);
         } else {
-            if(data.quantity === 0){
-                document.getElementById('cart-item-${itemPk}').remove();
+            if(data.quantity == 0){
+                console.log('Sono in quantity 0 '+ data.quantity)
+                document.getElementById(`cart-item-${itemPk}`).remove();
+                document.getElementById(`hr-${itemPk}`).remove();
             }
             else{
+                console.log('Sono in quantity diverso da 0 '+ data.quantity)
                 document.getElementById(`quantity-${itemPk}`).innerText = data.quantity;
             }
             // Aggiorna la quantità e il prezzo totale nel template

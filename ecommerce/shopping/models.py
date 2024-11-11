@@ -29,7 +29,7 @@ class Cart_Item(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=False)
 
     def __str__(self):
-        return f'{self.quantity} of {self.product.title}'
+        return f'Cart of {self.cart.user.username} - {self.quantity} of {self.product.title}'
 
     def inc_quantity(self, n):
         self.quantity = self.quantity + n

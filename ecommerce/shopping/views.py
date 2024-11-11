@@ -48,6 +48,7 @@ def update_cart_item_quantity(request, item_pk):
         elif action == "decrement" and item.quantity == 1:
             item.delete()
             return JsonResponse({
+                'quantity': 0,
                 'total_items': item.cart.total_items(),
                 'total_price': float(item.cart.total_price()),
             })
