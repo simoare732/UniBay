@@ -60,7 +60,9 @@
                 <div class="card w-100 p-3" style="background-color: #f8f9fa;">
                     <h5 class="mb-3">Totale: <br> EUR
                         <span id="total-price">{{ cart.total_price }}</span></h5>
-                    <button class="btn button-cart w-100">Procedi all'ordine</button>
+                    <button class="btn button-cart w-100" onclick="window.location.href='{% url 'shopping:checkout' %}'">
+                        Procedi all'ordine
+                    </button>
                 </div>
             </div>
         </div>

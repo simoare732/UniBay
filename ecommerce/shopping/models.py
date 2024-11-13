@@ -60,3 +60,19 @@ class Order_Item(models.Model):
         return f'{self.quantity} of {self.product.title}'
 
 
+
+class Shipping(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='shipping')
+    country = models.CharField(max_length=20, null=False)
+    name = models.CharField(max_length=20, null=False)
+    surname = models.CharField(max_length=20, null=False)
+    shipping_address = models.CharField(max_length=255, null=False)
+    city = models.CharField(max_length=50, null=False)
+    zip_code = models.CharField(max_length=5, null=False)
+    card_number = models.CharField(max_length=16, null=False)
+    expiration_date = models.CharField(max_length=5, null=False)
+    cvv = models.CharField(max_length=4, null=False)
+
+    def __str__(self):
+        return f'{self.name} {self.surname} - {self.city}'
+

@@ -1,0 +1,25 @@
+{% extends 'base_pages.html' %}
+{% load static %}
+
+{% block title %}Order done{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Ordine effettuato con successo!</h3>
+                    <a href="{% url 'pages:home_page' %}" class="btn custom-button-reg">Continua gli acquisti</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    {% include 'footer.html' %}
+{% endblock %}

@@ -33,18 +33,64 @@
                     </div>
 
                 </div>
-                <div class="card my-2   ">
-                    <div class="card-body">
-                        <h4>Dettagli di spedizione e pagamento</h4>
-                        <form id="checkout-form" method="post" novalidate>
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                        </form>
-                        {% if error %}
-                            <p class="text-danger mt-2">{{ error }}</p>
-                        {% endif %}
-                    </div>
+                <div class="shipping-payment">
+                    <form id="checkout-form" method="post">
+                        {% csrf_token %}
+                        <div class="card my-2">
+                            <div class="shipping card-body">
+                                <h4>Indirizzo di spedizione</h4>
+                                <div class="mb-3">
+                                    {{ form.country.label_tag }}
+                                    {{ form.country }}
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        {{ form.name.label_tag }}
+                                        {{ form.name }}
+                                    </div>
+                                    <div class="col">
+                                        {{ form.surname.label_tag }}
+                                        {{ form.surname }}
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    {{ form.shipping_address.label_tag }}
+                                    {{ form.shipping_address }}
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        {{ form.city.label_tag }}
+                                        {{ form.city }}
+                                    </div>
+                                    <div class="col">
+                                        {{ form.zip_code.label_tag }}
+                                        {{ form.zip_code }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div class="card my-2">
+                            <div class="payment card-body">
+                                <h4>Metodo di pagamento</h4>
+                                <div class="mb-3">
+                                    {{ form.card_number.label_tag }}
+                                    {{ form.card_number }}
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        {{ form.expiration_date.label_tag }}
+                                        {{ form.expiration_date }}
+                                    </div>
+                                    <div class="col">
+                                        {{ form.cvv.label_tag }}
+                                        {{ form.cvv }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
 
             </div>
@@ -53,7 +99,7 @@
                 <div class="card w-100 p-3" style="background-color: #f8f9fa;">
                     <h5 class="mb-3">Totale: <br> EUR
                         <span id="total-price">{{ total_price }}</span></h5>
-                    <button class="btn button-cart w-100" onclick="document.getElementById('checkout-form').submit();">
+                    <button class="btn button-cart w-100" id="submit-button">
                         Conferma e paga
                     </button>
                 </div>
@@ -62,8 +108,17 @@
         </div>
     </div>
 
-
-
+    <script>
+        document.getElementById("submit-button").addEventListener("click", function(event) {
+            // Verifica che il form sia valido prima di inviarlo
+            var form = document.getElementById("checkout-form");
+            if (form.checkValidity()) {
+                form.submit();  // Invia il form se valido
+            } else {
+                form.reportValidity();  // Mostra gli errori di validazione
+            }
+        });
+    </script>
 
 
     {% include 'footer.html' %}
