@@ -1,15 +1,16 @@
 import json
+from audioop import reverse
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView, FormView, TemplateView
 
 from listings.models import Category
 from .models import *
-from .forms import *
+from .forms import shipping_form, payment_form
 
 @require_POST
 def add_to_cart(request, product_id):
@@ -90,123 +91,92 @@ def order_success(request):
     return render(request, 'shopping/order_success.html', {'categories': categories})
 
 
-class checkout_view(View):
-    def get(self, request):
-        product_id = request.GET.get('product_id')
-        cart = request.user.cart
-        form = address_form()
+class checkout_view(TemplateView):
+    template_name = 'shopping/checkout.html'
 
-        # Se `product_id` è presente, aggiunge solo quel prodotto al checkout
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        product_id = self.request.GET.get('product_id')
+
+        # If `product_id` is present, add only that product to the checkout, otherwise add all the items in the cart
         if product_id:
             product = get_object_or_404(Product, pk=product_id)
             total_price = product.price
-            items = [{'product': product, 'quantity': 1, 'total_price': total_price}]
+            quantity = 1
+            items = [{'product': product, 'quantity': quantity, 'total_price': total_price}]
+            context['product_id'] = product_id
+
         else:
-            # Altrimenti, aggiunge tutti gli articoli nel carrello
-            items = [{'product': item.product, 'quantity': item.quantity, 'total_price': item.total_price()} for item in
-                     cart.items.all()]
+            cart = self.request.user.cart
+            # Take all the items in the cart with their quantity and total price
+            items = [{'product': item.product, 'quantity': item.quantity, 'total_price': item.total_price()} for item in cart.items.all()]
             total_price = cart.total_price()
+            context['product_id'] = None
 
-        return render(request, 'shopping/checkout.html', {
-            'items': items,
-            'form': form,
-            'total_price': total_price,
-            'single_product': bool(product_id),  # Passiamo questo valore al template
-        })
+        context['total_price'] = total_price
+        context['items'] = items
 
-    def post(self, request):
-        print('Sono entrato in post')
-        product_id = request.GET.get('product_id')
-        form = address_form(request.POST)
+        context['shipping_form'] = kwargs.get('shipping_form', shipping_form())
+        context['payment_form'] = kwargs.get('payment_form', payment_form())
 
-        if form.is_valid():
-            print('Form valido')
+        return context
 
-            # Estrai i dati dal form
-            country = form.cleaned_data['country']
-            name = form.cleaned_data['name']
-            surname = form.cleaned_data['surname']
-            shipping_address = form.cleaned_data['shipping_address']
-            city = form.cleaned_data['city']
-            zip_code = form.cleaned_data['zip_code']
-            card_number = form.cleaned_data['card_number']
-            expiration_date = form.cleaned_data['expiration_date']
-            cvv = form.cleaned_data['cvv']
+    def post(self, request, *args, **kwargs):
+        shipping_form_instance = shipping_form(request.POST)
+        payment_form_instance = payment_form(request.POST)
 
-            # Creiamo o recuperiamo la spedizione (Shipping)
-            # Possiamo verificare se esiste già una spedizione per questo utente, ma per ora
-            # creiamo una nuova spedizione per ogni ordine
-            shipping = Shipping.objects.filter(shipping_address=shipping_address, city=city,
-                                               zip_code=zip_code, card_number=card_number).first()
-            if not shipping:
-                shipping = Shipping.objects.create(
-                    order=None,  # Non associamo ancora l'ordine, lo faremo dopo
-                    country=country,
-                    name=name,
-                    surname=surname,
-                    shipping_address=shipping_address,
-                    city=city,
-                    zip_code=zip_code,
-                    card_number=card_number,
-                    expiration_date=expiration_date,
-                    cvv=cvv,
-                )
 
-            # Se è presente un `product_id`, creiamo un ordine per quel singolo prodotto
+
+        if shipping_form_instance.is_valid() and payment_form_instance.is_valid():
+            # Create or get the Shipping and Payment instances. If shipping already exists, created_sh is False, otherwise True
+            # Same with Payment
+            sh, created_sh = Shipping.objects.get_or_create(
+                country=shipping_form_instance.cleaned_data['country'],
+                name=shipping_form_instance.cleaned_data['name'],
+                surname=shipping_form_instance.cleaned_data['surname'],
+                shipping_address=shipping_form_instance.cleaned_data['shipping_address'],
+                city=shipping_form_instance.cleaned_data['city'],
+                zip_code=shipping_form_instance.cleaned_data['zip_code'],
+            )
+            pay, created_pay = Payment.objects.get_or_create(
+                card_number=payment_form_instance.cleaned_data['card_number'],
+                expiration_date=payment_form_instance.cleaned_data['expiration_date'],
+                cvv=payment_form_instance.cleaned_data['cvv'],
+            )
+
+            product_id = request.GET.get('product_id')
+
             if product_id:
                 product = get_object_or_404(Product, pk=product_id)
+                items = [{'product': product, 'quantity': 1, 'total_price': product.price}]
                 total_price = product.price
-
-                # Creazione dell'ordine e collegamento alla spedizione
-                order = Order.objects.create(
-                    user=request.user,
-                    status='In progress',
-                    total_price=total_price,
-                )
-
-                # Aggiungi il prodotto come `Order_Item`
-                Order_Item.objects.create(
-                    order=order,
-                    product=product,
-                    quantity=1,
-                    price=total_price,
-                )
-
-                # Collega l'ordine alla spedizione appena creata
-                shipping.order = order
-                shipping.save()
-
             else:
-                # Altrimenti, creiamo un ordine per tutti gli articoli nel carrello
                 cart = request.user.cart
-                order = Order.objects.create(
-                    user=request.user,
-                    status='In progress',
-                    total_price=cart.total_price(),
-                )
-
-                # Aggiungiamo ogni elemento del carrello all'ordine
-                for item in cart.items.all():
-                    Order_Item.objects.create(
-                        order=order,
-                        product=item.product,
-                        quantity=item.quantity,
-                        price=item.total_price(),
-                    )
-
-                # Collega l'ordine alla spedizione
-                shipping.order = order
-                shipping.save()
-
-                # Svuota il carrello
+                items = [{'product': item.product, 'quantity': item.quantity, 'total_price': item.total_price()} for
+                         item in cart.items.all()]
+                total_price = cart.total_price()
+                # Empty the cart
                 cart.items.all().delete()
 
-            # Redirect alla pagina di conferma dell'ordine
-            print('Sto per redirectare')
+            order = Order.objects.create(
+                user=request.user,
+                status='Paid',
+                total_price=total_price,
+                shipping=sh,
+                payment=pay,
+            )
+
+            for item in items:
+                Order_Item.objects.create(
+                    order=order,
+                    product=item['product'],
+                    quantity=item['quantity'],
+                    price=item['total_price'],
+                )
+
             return redirect('shopping:order_success')
 
-        # Se il form non è valido, restituiamo la pagina con l'errore
-        print(form.errors)
-        return render(request, 'shopping/checkout.html', {
-            'error': 'Errore durante l’elaborazione del pagamento',
-        })
+        else:
+            return self.render_to_response(
+                self.get_context_data(shipping_form=shipping_form_instance, payment_form=payment_form_instance))

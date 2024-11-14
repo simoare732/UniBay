@@ -45,9 +45,11 @@ class Order(models.Model):
     status = models.CharField(max_length=20, default='In progress')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField(auto_now_add=True, null=False)
+    shipping = models.ForeignKey('Shipping', on_delete=models.CASCADE, null=True, blank=True, related_name='order')
+    payment = models.ForeignKey('Payment', on_delete=models.CASCADE, null=True, blank=True, related_name='order')
 
     def __str__(self):
-        return f'Order of {self.user.username}'
+        return f'Order of {self.user.username} - {self.pk}'
 
 
 class Order_Item(models.Model):
@@ -62,17 +64,24 @@ class Order_Item(models.Model):
 
 
 class Shipping(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='shipping')
     country = models.CharField(max_length=20, null=False)
     name = models.CharField(max_length=20, null=False)
     surname = models.CharField(max_length=20, null=False)
     shipping_address = models.CharField(max_length=255, null=False)
     city = models.CharField(max_length=50, null=False)
     zip_code = models.CharField(max_length=5, null=False)
+
+
+    def __str__(self):
+        return f'Address of {self.name} {self.surname} in {self.city}'
+
+
+
+class Payment(models.Model):
+    # In a real application, we would use a more secure way to store credit card information
     card_number = models.CharField(max_length=16, null=False)
     expiration_date = models.CharField(max_length=5, null=False)
     cvv = models.CharField(max_length=4, null=False)
 
     def __str__(self):
-        return f'{self.name} {self.surname} - {self.city}'
-
+        return f'Payment with card ending in {self.card_number[-4:]}'

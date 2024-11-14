@@ -16,7 +16,7 @@
                 <h2>Carrello</h2>
                 <hr>
                 {% if cart.total_items == 0 %}
-                    <p>Il carrello è vuoto</p>
+                    <p>Il carrello è vuoto :(</p>
                 {% else %}
                     {% for item in cart.items.all %}
                         <div id="cart-item-{{ item.pk }}" class="row mb-3">
@@ -55,16 +55,18 @@
                 {% endif %}
             </div>
 
-            <!-- Colonna destra: Pulsante "Procedi all'ordine" in un riquadro bianco -->
-            <div class="col-md-4 d-flex justify-content-center align-items-start mt-5">
-                <div class="card w-100 p-3" style="background-color: #f8f9fa;">
-                    <h5 class="mb-3">Totale: <br> EUR
-                        <span id="total-price">{{ cart.total_price }}</span></h5>
-                    <button class="btn button-cart w-100" onclick="window.location.href='{% url 'shopping:checkout' %}'">
-                        Procedi all'ordine
-                    </button>
+            <!-- Right column -->
+            {% if cart.total_items != 0 %}
+                <div class="col-md-4 d-flex justify-content-center align-items-start mt-5">
+                    <div class="card w-100 p-3" style="background-color: #f8f9fa;">
+                        <h5 class="mb-3">Totale: <br> EUR
+                            <span id="total-price">{{ cart.total_price }}</span></h5>
+                        <button class="btn button-cart w-100" onclick="window.location.href='{% url 'shopping:checkout' %}'">
+                            Procedi all'ordine
+                        </button>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 

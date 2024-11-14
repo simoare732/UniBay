@@ -1,10 +1,9 @@
 from django import forms
-from .models import Shipping
+from .models import Shipping, Payment
 
 
-class address_form(forms.Form):
+class shipping_form(forms.ModelForm):
     country = forms.CharField(
-        required=True,
         label="Paese", max_length=20,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
@@ -28,6 +27,13 @@ class address_form(forms.Form):
         label="CAP", max_length=5,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
+
+    class Meta:
+        model = Shipping
+        fields = ['country', 'name', 'surname', 'shipping_address', 'city', 'zip_code']
+
+
+class payment_form(forms.ModelForm):
     card_number = forms.CharField(
         label="Numero della carta di credito", max_length=16,
         widget=forms.TextInput(attrs={'class': 'form-control'})
@@ -41,6 +47,6 @@ class address_form(forms.Form):
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
-
     class Meta:
-        model = Shipping
+        model = Payment
+        fields = ['card_number', 'expiration_date', 'cvv']

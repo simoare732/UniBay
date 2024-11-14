@@ -6,4 +6,5 @@ admin.site.register(Cart_Item)
 admin.site.register(Order)
 admin.site.register(Order_Item)
 admin.site.register(Shipping)
+admin.site.register(Payment)
 

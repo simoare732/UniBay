@@ -14,7 +14,14 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 my-2">
-                <h2>Riepilogo dell'ordine</h2>
+                <div class="d-flex justify-content-between align-items-center ">
+                    <h2>Riepilogo dell'ordine</h2>
+                    {% if product_id is not None %}
+                        <a href="{% url 'listings:detail_product' product_id %}" class="btn btn-outline-secondary">Torna indietro</a>
+                    {% else %}
+                        <a href="{% url 'shopping:list_cart' %}" class="btn btn-outline-secondary">Torna indietro</a>
+                    {% endif %}
+                </div>
                 <hr>
                 <div class="card">
                     <div class="card-body">
@@ -40,31 +47,31 @@
                             <div class="shipping card-body">
                                 <h4>Indirizzo di spedizione</h4>
                                 <div class="mb-3">
-                                    {{ form.country.label_tag }}
-                                    {{ form.country }}
+                                    {{ shipping_form.country.label_tag }}
+                                    {{ shipping_form.country }}
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col">
-                                        {{ form.name.label_tag }}
-                                        {{ form.name }}
+                                        {{ shipping_form.name.label_tag }}
+                                        {{ shipping_form.name }}
                                     </div>
                                     <div class="col">
-                                        {{ form.surname.label_tag }}
-                                        {{ form.surname }}
+                                        {{ shipping_form.surname.label_tag }}
+                                        {{ shipping_form.surname }}
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    {{ form.shipping_address.label_tag }}
-                                    {{ form.shipping_address }}
+                                    {{ shipping_form.shipping_address.label_tag }}
+                                    {{ shipping_form.shipping_address }}
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col">
-                                        {{ form.city.label_tag }}
-                                        {{ form.city }}
+                                        {{ shipping_form.city.label_tag }}
+                                        {{ shipping_form.city }}
                                     </div>
                                     <div class="col">
-                                        {{ form.zip_code.label_tag }}
-                                        {{ form.zip_code }}
+                                        {{ shipping_form.zip_code.label_tag }}
+                                        {{ shipping_form.zip_code }}
                                     </div>
                                 </div>
                             </div>
@@ -74,17 +81,17 @@
                             <div class="payment card-body">
                                 <h4>Metodo di pagamento</h4>
                                 <div class="mb-3">
-                                    {{ form.card_number.label_tag }}
-                                    {{ form.card_number }}
+                                    {{ payment_form.card_number.label_tag }}
+                                    {{ payment_form.card_number }}
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col">
-                                        {{ form.expiration_date.label_tag }}
-                                        {{ form.expiration_date }}
+                                        {{ payment_form.expiration_date.label_tag }}
+                                        {{ payment_form.expiration_date }}
                                     </div>
                                     <div class="col">
-                                        {{ form.cvv.label_tag }}
-                                        {{ form.cvv }}
+                                        {{ payment_form.cvv.label_tag }}
+                                        {{ payment_form.cvv }}
                                     </div>
                                 </div>
                             </div>
@@ -111,7 +118,7 @@
     <script>
         document.getElementById("submit-button").addEventListener("click", function(event) {
             // Verifica che il form sia valido prima di inviarlo
-            var form = document.getElementById("checkout-form");
+            let form = document.getElementById("checkout-form");
             if (form.checkValidity()) {
                 form.submit();  // Invia il form se valido
             } else {
