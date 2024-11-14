@@ -102,8 +102,8 @@ class checkout_view(TemplateView):
         # If `product_id` is present, add only that product to the checkout, otherwise add all the items in the cart
         if product_id:
             product = get_object_or_404(Product, pk=product_id)
-            total_price = product.price
-            quantity = 1
+            quantity = self.request.GET.get('quantity')
+            total_price = product.price * int(quantity)
             items = [{'product': product, 'quantity': quantity, 'total_price': total_price}]
             context['product_id'] = product_id
 
