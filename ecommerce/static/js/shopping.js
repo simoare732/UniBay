@@ -53,3 +53,4 @@ function addToCart(productId){
     .catch(error => console.error('Errore:', error));
 }
 
+

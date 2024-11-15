@@ -2,6 +2,7 @@ import json
 from audioop import reverse
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
@@ -19,7 +20,14 @@ def add_to_cart(request, product_id):
         product = Product.objects.get(id=product_id)
 
         data = json.loads(request.body)
-        quantity = int(data.get('quantity'))
+        quantity = data.get('quantity')
+
+        if not quantity.isdigit() or int(quantity) < 1 or int(quantity) > product.quantity:
+            return JsonResponse({
+                'status': 'error',
+            })
+
+        quantity = int(quantity)
 
         cart, created = Cart.objects.get_or_create(user=user)
         cart_item, created = Cart_Item.objects.get_or_create(cart=cart, product=product)
@@ -62,9 +70,10 @@ def update_cart_item_quantity(request, item_pk):
         item = Cart_Item.objects.get(pk=item_pk, cart__user=request.user)
         data = json.loads(request.body)
         action = data.get('action')
+        max = item.product.quantity
 
         # Incremenet or decrement the quantity of the item
-        if action == "increment":
+        if action == "increment" and item.quantity < max:
             item.inc_quantity(1)
         elif action == "decrement" and item.quantity > 1:
             item.inc_quantity(-1)
@@ -122,6 +131,7 @@ class checkout_view(TemplateView):
 
         return context
 
+
     def post(self, request, *args, **kwargs):
         shipping_form_instance = shipping_form(request.POST)
         payment_form_instance = payment_form(request.POST)
@@ -131,49 +141,51 @@ class checkout_view(TemplateView):
         if shipping_form_instance.is_valid() and payment_form_instance.is_valid():
             # Create or get the Shipping and Payment instances. If shipping already exists, created_sh is False, otherwise True
             # Same with Payment
-            sh, created_sh = Shipping.objects.get_or_create(
-                country=shipping_form_instance.cleaned_data['country'],
-                name=shipping_form_instance.cleaned_data['name'],
-                surname=shipping_form_instance.cleaned_data['surname'],
-                shipping_address=shipping_form_instance.cleaned_data['shipping_address'],
-                city=shipping_form_instance.cleaned_data['city'],
-                zip_code=shipping_form_instance.cleaned_data['zip_code'],
-            )
-            pay, created_pay = Payment.objects.get_or_create(
-                card_number=payment_form_instance.cleaned_data['card_number'],
-                expiration_date=payment_form_instance.cleaned_data['expiration_date'],
-                cvv=payment_form_instance.cleaned_data['cvv'],
-            )
-
-            product_id = request.GET.get('product_id')
-
-            if product_id:
-                product = get_object_or_404(Product, pk=product_id)
-                items = [{'product': product, 'quantity': 1, 'total_price': product.price}]
-                total_price = product.price
-            else:
-                cart = request.user.cart
-                items = [{'product': item.product, 'quantity': item.quantity, 'total_price': item.total_price()} for
-                         item in cart.items.all()]
-                total_price = cart.total_price()
-                # Empty the cart
-                cart.items.all().delete()
-
-            order = Order.objects.create(
-                user=request.user,
-                status='Paid',
-                total_price=total_price,
-                shipping=sh,
-                payment=pay,
-            )
-
-            for item in items:
-                Order_Item.objects.create(
-                    order=order,
-                    product=item['product'],
-                    quantity=item['quantity'],
-                    price=item['total_price'],
+            with transaction.atomic():
+                sh, created_sh = Shipping.objects.get_or_create(
+                    country=shipping_form_instance.cleaned_data['country'],
+                    name=shipping_form_instance.cleaned_data['name'],
+                    surname=shipping_form_instance.cleaned_data['surname'],
+                    shipping_address=shipping_form_instance.cleaned_data['shipping_address'],
+                    city=shipping_form_instance.cleaned_data['city'],
+                    zip_code=shipping_form_instance.cleaned_data['zip_code'],
                 )
+                pay, created_pay = Payment.objects.get_or_create(
+                    card_number=payment_form_instance.cleaned_data['card_number'],
+                    expiration_date=payment_form_instance.cleaned_data['expiration_date'],
+                    cvv=payment_form_instance.cleaned_data['cvv'],
+                )
+
+                product_id = request.GET.get('product_id')
+
+                if product_id:
+                    product = get_object_or_404(Product, pk=product_id)
+                    items = [{'product': product, 'quantity': int(request.GET.get('quantity', 1)), 'total_price': product.price}]
+                    total_price = product.price
+
+                else:
+                    cart = request.user.cart
+                    items = [{'product': item.product, 'quantity': item.quantity, 'total_price': item.total_price()} for
+                             item in cart.items.all()]
+                    total_price = cart.total_price()
+                    # Empty the cart
+                    cart.items.all().delete()
+
+                order = Order.objects.create(
+                    user=request.user,
+                    status='Paid',
+                    total_price=total_price,
+                    shipping=sh,
+                    payment=pay,
+                )
+
+                for item in items:
+                    Order_Item.objects.create(
+                        order=order,
+                        product=item['product'],
+                        quantity=item['quantity'],
+                        price=item['total_price'],
+                    )
 
             return redirect('shopping:order_success')
 

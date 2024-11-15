@@ -68,16 +68,17 @@
                 <h3 class="price mt-3">EUR {{ product.price }}</h3>
                 <div class="d-flex align-items-center mt-3">
                     <label for="quantity" class="form-label mb-0 me-2">Quantità:</label>
-                    <input id="quantity" type="number" class="form-control" min="1" value="1" style="width: 70px;">
-                    <small class="text-muted ms-2">Disponibile: {{ product.quantity }}</small>
+                    <input id="quantity" type="number" class="form-control" min="1" max="{{ product.quantity }}" value="1" style="width: 70px;">
+                    <p class="text-muted ms-2">Disponibile: {{ product.quantity }}</p>
                 </div>
+                <small id="quantity-error" class="text-danger d-none">La quantità non può superare il massimo disponibile.</small>
 
                 <div class="d-flex flex-column w-100 mt-3">
-                    <button class="btn button-cart mb-2 w-100" onclick="window.location.href='{% url 'shopping:checkout' %}?product_id={{ product.id }}&quantity='+document.getElementById('quantity').value">
+                    <button id="buy-now-btn" class="btn button-cart mb-2 w-100" data-checkout-url="{% url 'shopping:checkout' %}" data-product-id="{{ product.pk }}">
                         Compra subito
                     </button>
 
-                    <button class="btn button-prefer mb-2 w-100" onclick="addToCart({{ product.pk }})">
+                    <button id="cart-btn" class="btn button-prefer mb-2 w-100" onclick="addToCart({{ product.pk }})">
                         <i class="fas fa-shopping-cart"></i> Aggiungi al carrello
                     </button>
 
@@ -229,6 +230,8 @@
 
     <script src="{% static 'js/favourite.js' %}"></script>
     <script src="{% static 'js/shopping.js' %}"></script>
+    <script src="{% static 'js/check_quantity.js' %}"></script>
+    <script src="{% static 'js/buy_now_btn.js' %}"></script>
 
     {% include 'footer.html' %}
 {% endblock %}
