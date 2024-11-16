@@ -9,6 +9,9 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, TemplateView
+from django.utils.timezone import now
+from datetime import timedelta
+
 
 from listings.models import Category
 from .models import *
@@ -240,11 +243,26 @@ class order_list_view(LoginRequiredMixin, ListView):
     login_url = 'users:login'
 
     def get_queryset(self):
-        return Order.objects.filter(user=self.request.user).order_by('-date')
+        queryset = Order.objects.filter(user=self.request.user).order_by('-date')
+        # Remember: timedelta return the duration of the parameter. timedelta(days=30) return the duration of 30 days
+        # now() returns the timestamp of the current time. So now() - timedelta(days=30) returns the timestamp of 30 days ago
+        time_filter = self.request.GET.get('filter', 'all')  # Valore predefinito: tutti gli ordini
+        if time_filter == 'last_30_days':
+            start_date = now() - timedelta(days=30)
+            queryset = queryset.filter(date__gte=start_date)
+        elif time_filter == 'last_3_months':
+            start_date = now() - timedelta(days=90)
+            queryset = queryset.filter(date__gte=start_date)
+        elif time_filter == 'last_year':
+            start_date = now() - timedelta(days=365)
+            queryset = queryset.filter(date__gte=start_date)
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
+        context['selected_filter'] = self.request.GET.get('filter')
         return context
 
 

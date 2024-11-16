@@ -13,7 +13,22 @@
             <h3>I miei ordini</h3>
         </div>
         <hr>
-        <p>{{ object_list.count }} ordini effettuati</p>
+        <div class="d-flex flex-row align-items-center mb-3">
+            <p class="mx-3 mb-0">{{ object_list.count }} ordini effettuati</p>
+            <form method="get" id="filter-form" class="d-flex align-items-center">
+                <select
+                        name="filter"
+                        id="filter-show-orders"
+                        class="form-select form-select-sm"
+                        onchange="document.getElementById('filter-form').submit();">
+                    <option value="all" {% if selected_filter == 'all' %}selected{% endif %}>da sempre</option>
+                    <option value="last_30_days" {% if selected_filter == 'last_30_days' %}selected{% endif %}>negli ultimi 30 giorni</option>
+                    <option value="last_3_months" {% if selected_filter == 'last_3_months' %}selected{% endif %}>negli ultimi 3 mesi</option>
+                    <option value="last_year" {% if selected_filter == 'last_year' %}selected{% endif %}>nell'ultimo anno</option>
+                </select>
+            </form>
+        </div>
+
 
         <div class="row">
             {% for order in object_list %}
