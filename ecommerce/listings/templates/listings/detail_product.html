@@ -66,37 +66,42 @@
 
                 <hr class="mb-3" style="width: 100%">
                 <h3 class="price mt-3">EUR {{ product.price }}</h3>
-                <div class="d-flex align-items-center mt-3">
-                    <label for="quantity" class="form-label mb-0 me-2">Quantità:</label>
-                    <input id="quantity" type="number" class="form-control" min="1" max="{{ product.quantity }}" value="1" style="width: 70px;">
-                    <p class="text-muted ms-2">Disponibile: {{ product.quantity }}</p>
-                </div>
-                <small id="quantity-error" class="text-danger d-none">La quantità non può superare il massimo disponibile.</small>
+                {% if product.seller.user != user %}
+                    <div class="d-flex align-items-center mt-3">
+                        <label for="quantity" class="form-label mb-0 me-2">Quantità:</label>
+                        <input id="quantity" type="number" class="form-control" min="1" max="{{ product.quantity }}" value="1" style="width: 70px;">
+                        <p class="text-muted ms-2">Disponibile: {{ product.quantity }}</p>
+                    </div>
+                    <small id="quantity-error" class="text-danger d-none">La quantità non può superare il massimo disponibile.</small>
 
-                <div class="d-flex flex-column w-100 mt-3">
-                    <button id="buy-now-btn" class="btn button-cart mb-2 w-100" data-checkout-url="{% url 'shopping:checkout' %}" data-product-id="{{ product.pk }}">
-                        Compra subito
-                    </button>
+                    <div class="d-flex flex-column w-100 mt-3">
 
-                    <button id="cart-btn" class="btn button-prefer mb-2 w-100" onclick="addToCart({{ product.pk }})">
-                        <i class="fas fa-shopping-cart"></i> Aggiungi al carrello
-                    </button>
+                            <button id="buy-now-btn" class="btn button-cart mb-2 w-100"
+                                    data-checkout-url="{% url 'shopping:checkout' %}" data-product-id="{{ product.pk }}" data-token="{{ request.session.checkout_token }}">
+                                Compra subito
+                            </button>
 
-                    {% if user.is_authenticated %}
+                            <button id="cart-btn" class="btn button-prefer mb-2 w-100" onclick="addToCart({{ product.pk }})">
+                                <i class="fas fa-shopping-cart"></i> Aggiungi al carrello
+                            </button>
 
-                        <button class="btn button-prefer w-100" id="heart-button" onclick="toggleFavorite({{ product.pk }})">
-                            <i class="{% if is_favorite %}fas{% else %}far{% endif %} fa-heart" id="heart-icon"></i> Aggiungi ai preferiti
-                        </button>
 
-                    {% else %}
+                        {% if user.is_authenticated %}
 
-                        <a href="{% url 'users:login' %}" class="btn button-prefer w-100" id="heart-button" style="text-decoration: none; color: inherit;">
-                            <i class="far fa-heart" id="heart-icon"></i> Aggiungi ai preferiti
-                        </a>
+                            <button class="btn button-prefer w-100" id="heart-button" onclick="toggleFavorite({{ product.pk }})">
+                                <i class="{% if is_favorite %}fas{% else %}far{% endif %} fa-heart" id="heart-icon"></i> Aggiungi ai preferiti
+                            </button>
 
-                    {% endif %}
+                        {% else %}
 
-                </div>
+                            <a href="{% url 'users:login' %}" class="btn button-prefer w-100" id="heart-button" style="text-decoration: none; color: inherit;">
+                                <i class="far fa-heart" id="heart-icon"></i> Aggiungi ai preferiti
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+                {% endif %}
 
             </div>
 

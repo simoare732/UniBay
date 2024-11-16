@@ -2,8 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const buyNowBtn = document.getElementById('buy-now-btn');
     const quantityInput = document.getElementById('quantity');
     const maxQuantity = parseInt(quantityInput.getAttribute('max'), 10);
+
     const productId = buyNowBtn.getAttribute('data-product-id');
     const checkoutUrl = buyNowBtn.getAttribute('data-checkout-url');
+    const token = buyNowBtn.getAttribute('data-token');
 
 
     buyNowBtn.addEventListener('click', () => {
@@ -16,6 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Se tutto è ok, reindirizza alla pagina di checkout
-        window.location.href = `${checkoutUrl}?product_id=${productId}&quantity=${selectedQuantity}`;
+        window.location.href = `${checkoutUrl}?product_id=${productId}&quantity=${selectedQuantity}&token=${token}`;
     });
 });

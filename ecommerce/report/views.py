@@ -36,7 +36,6 @@ class report_create_view(reguser_general_mixin, CreateView):
 class report_list_view(admin_required_mixin, ListView):
     model = Report
     template_name = 'report/report_list.html'
-    #ordering = ['-date']
 
     def get_queryset(self):
         return Report.objects.filter(seen=False).order_by('-date')
@@ -49,12 +48,6 @@ class report_list_view(admin_required_mixin, ListView):
         return context
 
 
-# class report_delete_view(admin_required_mixin, DeleteView):
-#     model = Report
-#     template_name = 'report/report_delete.html'
-#
-#     def get_success_url(self):
-#         return reverse('report:list_reports')
 @require_POST
 def mark_report_seen(request, report_pk):
     report = get_object_or_404(Report, pk = report_pk)

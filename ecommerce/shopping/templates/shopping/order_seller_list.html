@@ -1,0 +1,85 @@
+{% extends 'base_pages.html' %}
+{% load static %}
+
+{% block title %}List of orders{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/image.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="max-width: 800px;">
+        <div class="description w-100 d-flex justify-content-between align-items-center p-2">
+            <h2>Ordini sui miei prodotti</h2>
+        </div>
+        <hr>
+        <p>{{ object_list.count }} ordini effettuati</p>
+
+        <div class="row">
+            {% for item in object_list %}
+                <div class="col-md-12 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex flex-row">
+                                <div class="d-flex flex-column me-5">
+                                    <small>Ordine effettuato il:</small>
+                                    <small>{{ item.order.date }}</small>
+                                </div>
+                                <div class="d-flex flex-column me-5">
+                                    <small>Totale:</small>
+                                    <small>EUR {{ item.price }}</small>
+                                </div>
+                                <div class="d-flex flex-column me-5">
+                                    <small>Stato:</small>
+                                    <small>{{ item.status }}</small>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <small>Acquirente:</small>
+                                    <small>{{ item.order.user.username }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="col-md-3 d-flex align-items-center">
+                                <div class="image-container col-md-12">
+                                    <a href="{% url 'listings:detail_product' item.product.pk %}" target="_blank">
+                                        <img src="{{ item.product.image1.url }}" alt="Product Image 1" style="width: 100px; height: 100px;">
+                                    </a>
+                                </div>
+                                <div class="ms-3 col-md-12">
+                                    <p class="product-title">
+                                        <a href="{% url 'listings:detail_product' item.product.pk %}" target="_blank">{{ item.product.title }}</a>
+                                    </p>
+                                    <p class="text-muted mb-0">Quantità: {{ item.quantity }}</p>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {% if item.status == 'Paid' or item.status == 'In progress' %}
+                        <div class="d-flex my-1">
+                            <button class="btn btn-outline-primary me-2" onclick="updateOrder({{ item.pk }})">Spedito</button>
+                        </div>
+                    {% endif %}
+
+                </div>
+            {% endfor %}
+
+
+
+
+        </div>
+
+        {% if object_list.count != 0 %}
+            {% include 'nav_pages.html' %}
+        {% endif %}
+
+    </div>
+
+    <script src="{% static 'js/shopping.js' %}"></script>
+
+    {% include 'footer.html' %}
+{% endblock %}

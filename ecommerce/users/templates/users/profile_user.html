@@ -18,10 +18,15 @@
                         <a href="{% url 'users:update_profile_user' object.pk %}" class="btn btn-light">Modifica</a>
                     </div>
                 </div>
-                <div class="my-3 d-flex flex-column align-items-start">
-                    <a href="{% url 'watchlist:list_favourites' %}" class="btn custom-button mb-2">Lista preferiti</a>
-                    <a href="{% url 'reviews:list_user_review' %}" class="btn custom-button-reg mb-2">Visualizza recensioni sui prodotti</a>
-                    <a href="{% url 'reviews:list_user_seller_review' %}" class="btn custom-button-reg">Visualizza recensioni sui venditori</a>
+                <div class="my-3 d-flex flex-row align-items-start">
+                    <div class="d-flex flex-column">
+                        <a href="{% url 'watchlist:list_favourites' %}" class="btn custom-button me-2 mb-2">Lista preferiti</a>
+                        <a href="{% url 'reviews:list_user_review' %}" class="btn custom-button-reg">Visualizza recensioni sui prodotti</a>
+                    </div>
+                    <div class="d-flex flex-column ml-2 mx-2">
+                        <a href="{% url 'shopping:order_list' %}" class="btn custom-button me-2 mb-2">I miei ordini</a>
+                        <a href="{% url 'reviews:list_user_seller_review' %}" class="btn custom-button-reg me-2">Visualizza recensioni sui venditori</a>
+                    </div>
                 </div>
             </div>
         </div>

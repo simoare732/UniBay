@@ -1,3 +1,5 @@
+from secrets import token_urlsafe
+
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, DeleteView, DetailView, UpdateView
 
@@ -93,6 +95,11 @@ class detail_product_view(DetailView):
             context['is_favorite'] = is_favorite
         else:
             context['is_favorite'] = False
+
+        # Generate a token for buy the product
+        if 'checkout_token' not in self.request.session:
+            self.request.session['checkout_token'] = token_urlsafe(16)
+        context['checkout_token'] = self.request.session['checkout_token']
 
         return context
 

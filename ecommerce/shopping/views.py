@@ -1,4 +1,6 @@
 import json
+import secrets
+
 from django.core.mail import send_mail
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,6 +13,7 @@ from django.views.generic import ListView, TemplateView
 from listings.models import Category
 from .models import *
 from .forms import shipping_form, payment_form
+from users.mixins import seller_general_mixin
 
 @require_POST
 def add_to_cart(request, product_id):
@@ -60,6 +63,13 @@ class list_cart(LoginRequiredMixin, ListView):
         context['categories'] = Category.objects.all()
         context['cart'] = get_object_or_404(Cart, user=self.request.user)
 
+        # Generate a token for buy the product
+        if 'checkout_token' not in self.request.session:
+            self.request.session['checkout_token'] = secrets.token_urlsafe(16)
+        context['checkout_token'] = self.request.session['checkout_token']
+
+
+
         return context
 
 
@@ -103,6 +113,13 @@ class checkout_view(LoginRequiredMixin, TemplateView):
     template_name = 'shopping/checkout.html'
 
     login_url = 'users:login'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Controllo del token
+        token = self.request.GET.get('token')
+        if not token or token != self.request.session.get('checkout_token'):
+            return redirect('pages:home_page')  # Redirect per accesso non autorizzato
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -191,19 +208,20 @@ class checkout_view(LoginRequiredMixin, TemplateView):
                     Order_Item.objects.create(
                         order=order,
                         product=item['product'],
+                        status='Paid',
                         quantity=item['quantity'],
                         price=item['total_price'],
                     )
 
-                # for s in sellers:
-                #     msg = f"L'utente {request.user.username} ha acquistato dei prodotti da te"
-                #     send_mail(
-                #         'UniBay: Acquisto prodotti',
-                #         msg,
-                #         'simoaresta3@gmail.com',
-                #         [s.user.email],
-                #         fail_silently=False,
-                #     )
+                msg = f"L'utente {request.user.username} ha acquistato dei prodotti da te"
+                for s in sellers:
+                    send_mail(
+                        'UniBay: Acquisto prodotti',
+                        msg,
+                        'simoaresta3@gmail.com',
+                        [s.user.email],
+                        fail_silently=False,
+                    )
 
 
             return redirect('shopping:order_success')
@@ -211,3 +229,57 @@ class checkout_view(LoginRequiredMixin, TemplateView):
         else:
             return self.render_to_response(
                 self.get_context_data(shipping_form=shipping_form_instance, payment_form=payment_form_instance))
+
+
+
+class order_list_view(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'shopping/order_list.html'
+    paginate_by = 5
+
+    login_url = 'users:login'
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user).order_by('-date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
+
+
+class order_seller_list_view(seller_general_mixin, ListView):
+    model = Order_Item
+    template_name = 'shopping/order_seller_list.html'
+    paginate_by = 5
+
+    def get_queryset(self):
+        return Order_Item.objects.filter(product__seller=self.request.user.seller).order_by('-order__date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
+
+@require_POST
+def update_order(request, item_id):
+    try:
+        item = Order_Item.objects.get(id=item_id)
+        item.item_shipped()
+
+        msg = f"Il prodotto {item.product.title} è stato spedito"
+
+        send_mail(
+            'UniBay: Prodotto spedito',
+            msg,
+            item.product.seller.user.email,
+            [item.order.user.email],
+            fail_silently=False,
+        )
+
+        return JsonResponse({'status': 'success'})
+
+    except item_id.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Item not found.'})

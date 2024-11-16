@@ -54,3 +54,26 @@ function addToCart(productId){
 }
 
 
+
+function updateOrder(itemPk){
+
+    fetch(`/shopping/update_order/${itemPk}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // Assicurati di avere il CSRF token
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            location.reload();
+
+        } else {
+            alert('Errore l\'aggiornamento dello stato');
+        }
+    })
+    .catch(error => console.error('Errore:', error));
+}
+
+

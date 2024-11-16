@@ -28,6 +28,10 @@
                         <a href="{% url 'watchlist:list_favourites' %}" class="btn custom-button mb-2">Lista preferiti</a>
                         <a href="{% url 'reviews:list_seller_review' object.pk %}" class="btn custom-button-reg">Visualizza recensioni</a>
                     </div>
+                    <div class="d-flex flex-column ml-2">
+                        <a href="{% url 'shopping:order_list' %}" class="btn custom-button mb-2">I miei ordini</a>
+                        <a href="{% url 'shopping:order_seller_list' %}" class="btn custom-button-reg">Ordini sui miei prodotti</a>
+                    </div>
                 </div>
                 {% if object.strikes.count > 0 %}
                     <p class="text-muted">Attenzione: hai {{ object.strikes.count }} strikes</p>

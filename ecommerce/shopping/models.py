@@ -51,15 +51,55 @@ class Order(models.Model):
     def __str__(self):
         return f'Order of {self.user.username} - {self.pk}'
 
+    def order_shipped(self):
+        self.status = 'Shipped'
+        self.save()
+
+    def order_delivered(self):
+        self.status = 'Delivered'
+        self.save()
+
 
 class Order_Item(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    status = models.CharField(max_length=20, default='In progress')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return f'{self.quantity} of {self.product.title}'
+
+
+    def item_shipped(self):
+        self.status = 'Shipped'
+
+        cart_sent = True
+
+        for item in self.order.items.all():
+            if item.status == 'Paid' or item.status == 'In progress':
+                cart_sent = False
+                break
+
+        if cart_sent:
+            self.order.order_shipped()
+
+        self.save()
+
+    def item_delivered(self):
+        self.status = 'Delivered'
+
+        cart_delivered = True
+
+        for item in self.order.items.all():
+            if item.status != 'Delivered':
+                cart_delivered = False
+                break
+
+        if cart_delivered:
+            self.order.order_delivered()
+
+        self.save()
 
 
 
