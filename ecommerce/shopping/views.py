@@ -1,13 +1,12 @@
 import json
-from audioop import reverse
+from django.core.mail import send_mail
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from django.views import View
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView, CreateView, FormView, TemplateView
+from django.views.generic import ListView, TemplateView
 
 from listings.models import Category
 from .models import *
@@ -100,8 +99,10 @@ def order_success(request):
     return render(request, 'shopping/order_success.html', {'categories': categories})
 
 
-class checkout_view(TemplateView):
+class checkout_view(LoginRequiredMixin, TemplateView):
     template_name = 'shopping/checkout.html'
+
+    login_url = 'users:login'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -157,11 +158,13 @@ class checkout_view(TemplateView):
                 )
 
                 product_id = request.GET.get('product_id')
+                quantity = int(request.GET.get('quantity', 1))
 
                 if product_id:
                     product = get_object_or_404(Product, pk=product_id)
-                    items = [{'product': product, 'quantity': int(request.GET.get('quantity', 1)), 'total_price': product.price}]
+                    items = [{'product': product, 'quantity': quantity, 'total_price': product.price}]
                     total_price = product.price
+
 
                 else:
                     cart = request.user.cart
@@ -179,13 +182,29 @@ class checkout_view(TemplateView):
                     payment=pay,
                 )
 
+                sellers = set()
+
                 for item in items:
+                    item['product'].decrease_quantity(item['quantity'])
+                    item['product'].increase_sold(item['quantity'])
+                    sellers.add(item['product'].seller)
                     Order_Item.objects.create(
                         order=order,
                         product=item['product'],
                         quantity=item['quantity'],
                         price=item['total_price'],
                     )
+
+                # for s in sellers:
+                #     msg = f"L'utente {request.user.username} ha acquistato dei prodotti da te"
+                #     send_mail(
+                #         'UniBay: Acquisto prodotti',
+                #         msg,
+                #         'simoaresta3@gmail.com',
+                #         [s.user.email],
+                #         fail_silently=False,
+                #     )
+
 
             return redirect('shopping:order_success')
 
