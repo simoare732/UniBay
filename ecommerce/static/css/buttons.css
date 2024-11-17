@@ -25,6 +25,18 @@
     background-color: #e6e6e6 !important;
 }
 
+.tab-buttons,
+.tab-section{
+    display: none !important; /* Hide the tab */
+}
+
+.tab-buttons.active,
+.tab-section.active{
+    display: block !important; /* Show the tab */
+}
+
+
+
 /* Aggiungi questo blocco alla fine del file */
 #heart-icon {
     color: #052F4B !important;

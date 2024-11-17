@@ -31,6 +31,7 @@ urlpatterns = [
     path('watchlist/', include('watchlist.urls')),
     path('report/', include('report.urls')),
     path('shopping/', include('shopping.urls')),
+    path('questions/', include('questions.urls')),
 ]
 
 if settings.DEBUG:

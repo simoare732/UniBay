@@ -120,20 +120,32 @@
         <div class="row">
             <div class="w-100 d-flex justify-content-between align-items-center p-2">
                 <h3>Valutazioni e recensioni del prodotto</h3>
-                {% if user.is_authenticated %}
-                    {% if user.is_registered_user %}
-                        {% if user_review == None %}
-                            <a href="{% url 'reviews:create_review' product.pk %}" class="btn btn-outline-secondary">Scrivi una recensione</a>
-                        {% else %}
-                            <div class="d-flex flex-column">
-                                <a href="{% url 'reviews:update_review' user_review %}" class="btn btn-outline-secondary mb-1">Modifica la tua recensione</a>
-                                <a href="{% url 'reviews:delete_review' user_review %}" class="btn btn-outline-danger">Elimina la tua recensione</a>
-                            </div>
+                <div id="reviews-buttons" class="tab-buttons active">
+                    {% if user.is_authenticated %}
+                        {% if user.is_registered_user %}
+                            {% if user_review == None %}
+                                <a href="{% url 'reviews:create_review' product.pk %}" class="btn btn-outline-secondary">Scrivi una recensione</a>
+                            {% else %}
+                                <div class="d-flex flex-column">
+                                    <a href="{% url 'reviews:update_review' user_review %}" class="btn btn-outline-secondary mb-1">Modifica la tua recensione</a>
+                                    <a href="{% url 'reviews:delete_review' user_review %}" class="btn btn-outline-danger">Elimina la tua recensione</a>
+                                </div>
+                            {% endif %}
                         {% endif %}
+                    {% else %}
+                        <a href="{% url 'users:login' %}" class="btn btn-outline-secondary">Scrivi una recensione</a>
                     {% endif %}
-                {% else %}
-                    <a href="{% url 'users:login' %}" class="btn btn-outline-secondary">Scrivi una recensione</a>
-                {% endif %}
+                </div>
+
+                <div id="questions-buttons" class="tab-buttons d-none">
+                    {% if user.is_authenticated %}
+                        {% if user.is_registered_user %}
+                            <a href="{% url 'questions:create_question' product.pk %}" class="btn btn-outline-secondary">Fai una domanda</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'users:login' %}" class="btn btn-outline-secondary">Fai una domanda</a>
+                    {% endif %}
+                </div>
             </div>
 
             <div class="d-flex align-items-center">
@@ -157,7 +169,7 @@
             <div class="w-100 d-flex justify-content-between align-items-center p-2">
                 <div>
                     <button id="btn-reviews" class="btn btn-outline-secondary active" onclick="showSection('reviews')">Recensioni</button>
-                    <button id="btn-questions" class="btn btn-outline-secondary">Domande</button>
+                    <button id="btn-questions" class="btn btn-outline-secondary" onclick="showSection('questions')">Domande</button>
                 </div>
             </div>
 
@@ -194,7 +206,38 @@
             </div>
 
             <div class="tab-section d-none" id="questions-section">
+                <p class="text-muted">{{ product.questions.count }} Domande</p>
+                {% for q in product.questions.all %}
+                    <div class="question mb-3">
+                        <p class="fw-bold">{{ q.reg_user.user.username }}</p>
+                        <p class="my-3">Domanda: {{ q.text }}</p>
 
+                        {% if q.is_answered %}
+                            <p>Risposta: {{ q.get_answer.text }}</p>
+                        {% else %}
+                            {% if user.is_authenticated %}
+                                <div id="reply-section-{{ q.id }}">
+                                    <button
+                                            class="btn btn-outline-secondary btn-sm reply-button"
+                                            onclick="toggleReplyForm({{ q.id }})">
+                                        Rispondi
+                                    </button>
+                                </div>
+                                <!-- Modulo per rispondere -->
+                                <div id="reply-form-{{ q.id }}" class="reply-form d-none">
+                                    <form method="POST" action="{% url 'questions:add_answer' q.id %}">
+                                        {% csrf_token %}
+                                        <textarea name="text" rows="2" class="form-control mb-2" placeholder="Scrivi una risposta..." required></textarea>
+                                        <button type="submit" class="btn btn-primary btn-sm">Ok</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="cancelReply({{ q.id }})">Annulla</button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
+
+                    </div>
+                {% endfor %}
             </div>
 
 
@@ -251,7 +294,7 @@
     <script src="{% static 'js/shopping.js' %}"></script>
     <script src="{% static 'js/check_quantity.js' %}"></script>
     <script src="{% static 'js/buy_now_btn.js' %}"></script>
-    <script src="{% static 'js/review-question.js' %}"></script>
+    <script src="{% static 'js/question.js' %}"></script>
 
     {% include 'footer.html' %}
 {% endblock %}

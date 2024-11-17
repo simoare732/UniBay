@@ -1,0 +1,28 @@
+{% extends 'base_pages.html' %}
+
+{% block title %}Create question{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3>Scrivi la tua domanda</h3>
+        <div class="col-md-5 row mb-2">
+            <div class="col-md-2">
+                <div class="image-container" style="border: 1px solid #ddd;">
+                    <img src="{{ product.image1.url }}" alt="{{ product.name }}" class="card-img-top product-image">
+                </div>
+            </div>
+            <div class="col-md-9">
+                <p>{{ product.title }}</p>
+            </div>
+        </div>
+
+        <hr>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success btn-block">Invia</button>
+            <a class="btn btn-secondary" href="{% url 'listings:detail_product' product.pk %}">Annulla</a>
+        </form>
+    </div>
+{% endblock %}

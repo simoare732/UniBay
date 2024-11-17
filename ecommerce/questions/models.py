@@ -4,12 +4,19 @@ from listings.models import Product
 
 class Question(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="questions")
-    user = models.ForeignKey(Registered_User, on_delete=models.CASCADE, related_name="questions")
+    reg_user = models.ForeignKey(Registered_User, on_delete=models.CASCADE, related_name="questions")
     text = models.TextField()
     date = models.DateTimeField(auto_now_add=True, null=False)
 
     def __str__(self):
-        return f"Question from {self.user.user.username} about {self.product.title}"
+        return f"Question from {self.reg_user.user.username} about {self.product.title}"
+
+
+    def is_answered(self):
+        return self.answer.filter(approved=True).count() > 0
+
+    def get_answer(self):
+        return self.answer.filter(approved=True)
 
 
 class Answer(models.Model):
@@ -20,5 +27,5 @@ class Answer(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=False)
 
     def __str__(self):
-        return f"Answer to question from {self.question.user.user.username} about {self.question.product.title}"
+        return f"Answer to question from {self.question.reg_user.user.username} about {self.question.product.title}"
 
