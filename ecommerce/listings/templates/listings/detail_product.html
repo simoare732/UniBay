@@ -153,9 +153,19 @@
                     {% endwith %}
                 </div>
             </div>
-            <p class="text-muted">{{ product.reviews.count }} Valutazioni del prodotto</p>
 
-            <div class="reviews">
+            <div class="w-100 d-flex justify-content-between align-items-center p-2">
+                <div>
+                    <button id="btn-reviews" class="btn btn-outline-secondary active" onclick="showSection('reviews')">Recensioni</button>
+                    <button id="btn-questions" class="btn btn-outline-secondary">Domande</button>
+                </div>
+            </div>
+
+
+
+
+            <div class="tab-section" id="reviews-section">
+                <p class="text-muted">{{ product.reviews.count }} Valutazioni del prodotto</p>
                 {% if product.reviews.count == 0 and user.is_authenticated and user.is_registered_user %}
                     <a href="{% url 'reviews:create_review' product.pk %}" class="text-muted h4">Scrivi una recensione per primo</a>
                 {% else %}
@@ -181,6 +191,10 @@
                         </div>
                     {% endfor %}
                 {% endif %}
+            </div>
+
+            <div class="tab-section d-none" id="questions-section">
+
             </div>
 
 
@@ -237,6 +251,7 @@
     <script src="{% static 'js/shopping.js' %}"></script>
     <script src="{% static 'js/check_quantity.js' %}"></script>
     <script src="{% static 'js/buy_now_btn.js' %}"></script>
+    <script src="{% static 'js/review-question.js' %}"></script>
 
     {% include 'footer.html' %}
 {% endblock %}
