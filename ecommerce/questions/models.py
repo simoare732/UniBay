@@ -16,7 +16,7 @@ class Question(models.Model):
         return self.answer.filter(approved=True).count() > 0
 
     def get_answer(self):
-        return self.answer.filter(approved=True)
+        return self.answer.filter(approved=True).first()
 
 
 class Answer(models.Model):
@@ -28,4 +28,9 @@ class Answer(models.Model):
 
     def __str__(self):
         return f"Answer to question from {self.question.reg_user.user.username} about {self.question.product.title}"
+
+
+    def approve(self):
+        self.approved = True
+        self.save()
 

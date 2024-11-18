@@ -1,5 +1,5 @@
 from django.shortcuts import reverse, get_object_or_404, redirect
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 from .models import Question, Answer
 from listings.models import Product, Category
 from .forms import question_create_form
@@ -33,7 +33,7 @@ def add_answer(request, question_id):
 
     if request.method == "POST":
         text = request.POST.get("text")
-        if request.user.seller == question.product.seller:
+        if request.user.is_seller and request.user.seller == question.product.seller:
             ap = True
         else:
             ap = False
@@ -42,6 +42,31 @@ def add_answer(request, question_id):
                 question=question,
                 user=request.user,
                 text=text,
-                approved=ap  # Risposta da approvare
+                approved=ap  # If the user is the seller, the answer is automatically approved
             )
-    return redirect("products:detail_product", pk=question.product.pk)
+    if "list" in request.GET:
+        return redirect("questions:list_questions", pk=question.product.pk)
+    return redirect("listings:detail_product", pk=question.product.pk)
+
+
+
+class question_list_view(ListView):
+    model = Question
+    template_name = 'questions/question_list.html'
+    paginate_by = 5
+
+    def get_queryset(self):
+        product_pk = self.kwargs.get('pk')
+        return Question.objects.filter(product__pk=product_pk).order_by('-date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['product'] = Product.objects.get(pk=self.kwargs['pk'])
+        return context
+
+
+def approve_answer(request, answer_pk):
+    answer = get_object_or_404(Answer, pk=answer_pk)
+    answer.approve()
+    return redirect("questions:list_questions", pk=answer.question.product.pk)

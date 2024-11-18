@@ -1,0 +1,97 @@
+{% extends 'base_pages.html' %}
+{% load static %}
+
+{% block title %}List of questions{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Domande su: </h3>
+            <a href="{% url 'listings:list_products' %}" class="btn btn-outline-secondary">Torna indietro</a>
+        </div>
+
+        <br>
+        <div class="col-md-5 row mb-2">
+            <div class="col-md-3">
+                <div class="image-container">
+                    <img src="{{ product.image1.url }}" alt="{{ product.name }}" class="card-img-top product-image">
+                </div>
+            </div>
+            <div class="col-md-9">
+                <h4>{{ product.title }}</h4>
+            </div>
+        </div>
+        <hr>
+
+        {% for question in object_list %}
+            <div class="card mb-4">
+
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="fw-bold">{{ question.reg_user.user.username }}</h5>
+                            <p class="text-muted mb-0">{{ question.text }}</p>
+                        </div>
+                        {% if not question.is_answered %}
+                            <button class="btn btn-outline-primary btn-sm" onclick="toggleAnswerForm({{ question.pk }})">Rispondi</button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- If the question is answered, show first the approved answer and then the others. Otherwise show all the answers
+                 with the buttons to approve them -->
+                <div class="card-body">
+                    {% if question.is_answered %}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h6 class="fw-bold">{{ question.get_answer.user.username }}</h6>
+                                <p class="mb-0">{{ question.get_answer.text }}</p>
+                            </div>
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <hr>
+                        {% for a in question.answer.all %}
+                            {% if a != question.get_answer %}
+                                <div>
+                                    <h6 class="fw-bold">{{ a.user.username }}</h6>
+                                    <p class="mb-0">{{ a.text }}</p>
+                                </div>
+                                <hr>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% for a in question.answer.all %}
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h6 class="fw-bold">{{ a.user.username }}</h6>
+                                    <p class="mb-0">{{ a.text }}</p>
+                                </div>
+                                <form method="POST" action="{% url 'questions:approve_answer' a.pk %}" class="mb-0">
+                                    {% csrf_token %}
+                                    <button class="btn btn-success btn-sm">Approva</button>
+                                </form>
+                            </div>
+                            <hr>
+                        {% endfor %}
+                    {% endif %}
+
+
+                    <!-- Form to add an answer -->
+                    <div id="answer-form-{{ question.pk }}" class="answer-form mt-3" style="display: none;">
+                        <form method="POST" action="{% url 'questions:add_answer' question.pk %}?list=true">
+                            {% csrf_token %}
+                            <textarea name="text" class="form-control mb-2" rows="2" placeholder="Scrivi la tua risposta qui..."></textarea>
+                            <button type="submit" class="btn btn-primary btn-sm">Invia</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAnswerForm({{ question.pk }})">Annulla</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    {% include 'footer.html' %}
+
+    <script src="{% static 'js/question.js' %}"></script>
+{% endblock %}
