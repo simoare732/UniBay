@@ -35,14 +35,3 @@ function cancelReply(questionId) {
     document.getElementById(`reply-form-${questionId}`).classList.add('d-none');
     document.getElementById(`reply-section-${questionId}`).classList.remove('d-none');
 }
-
-
-// Show the answer form in 'question_list' page
-function toggleAnswerForm(questionPk) {
-    const form = document.getElementById(`answer-form-${questionPk}`);
-    if (form.style.display === "none") {
-        form.style.display = "block";
-    } else {
-        form.style.display = "none";
-    }
-}

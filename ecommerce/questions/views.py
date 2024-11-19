@@ -20,7 +20,7 @@ class create_question_view(CreateView):
     def form_valid(self, form):
         product_id = self.kwargs.get('pk')
         form.instance.product = Product.objects.get(pk=product_id)
-        form.instance.user = self.request.user.registered_user
+        form.instance.reg_user = self.request.user.registered_user
         return super().form_valid(form)
 
 
@@ -53,7 +53,6 @@ def add_answer(request, question_id):
 class question_list_view(ListView):
     model = Question
     template_name = 'questions/question_list.html'
-    paginate_by = 5
 
     def get_queryset(self):
         product_pk = self.kwargs.get('pk')

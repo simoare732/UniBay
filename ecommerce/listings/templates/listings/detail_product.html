@@ -215,7 +215,7 @@
                         {% if q.is_answered %}
                             <p>Risposta: {{ q.get_answer.text }}</p>
                         {% else %}
-                            {% if user.is_authenticated %}
+                            {% if user.is_authenticated and q.reg_user.user != user %}
                                 <div id="reply-section-{{ q.id }}">
                                     <button
                                             class="btn btn-outline-secondary btn-sm reply-button"
@@ -294,7 +294,7 @@
     <script src="{% static 'js/shopping.js' %}"></script>
     <script src="{% static 'js/check_quantity.js' %}"></script>
     <script src="{% static 'js/buy_now_btn.js' %}"></script>
-    <script src="{% static 'js/question.js' %}"></script>
+    <script src="{% static 'js/question-review.js' %}"></script>
 
     {% include 'footer.html' %}
 {% endblock %}
