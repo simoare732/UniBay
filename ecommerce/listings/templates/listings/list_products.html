@@ -61,8 +61,12 @@
                                     {% for category in product.categories.all %}
                                         <span class="badge bg-secondary">{{ category }}</span>
                                     {% endfor %}
-                                    <p class="card-text">Price: {{ product.price }}€</p>
-                                    <p class="card-text">Quantity: {{ product.quantity }}</p>
+                                    <p class="card-text">Prezzo: EUR {{ product.price }}</p>
+                                    <div class="d-flex">
+                                        <p class="card-text">Quantity: {{ product.quantity }}</p>
+                                        <p class="text-muted ms-auto">Venduti: {{ product.sold }}</p>
+                                    </div>
+
                                     <a href="{% url 'listings:update_product' product.pk %}" class="btn btn-primary">Modifica</a>
                                     <a href="{% url 'listings:delete_product' product.pk %}" class="btn btn-danger">Elimina</a>
                                     <a href="{% url 'listings:detail_product' product.pk %}" class="btn btn-success">Vedi sullo store</a>
@@ -78,25 +82,5 @@
 
     {% include 'footer.html' %}
 
-    <script>
-    // This script is used to filter the products by title
-
-        document.getElementById('searchInput').addEventListener('keyup', function() {
-            // Get the search value and convert it to lowercase for case-insensitive comparison
-            var searchValue = this.value.toLowerCase();
-            // Get all the elements with the class 'product-card'
-            var productCards = document.querySelectorAll('.product-card');
-            // For every product do the following
-            productCards.forEach(function(card) {
-                // Get the title of the product and convert it to lowercase for case-insensitive comparison
-                var title = card.querySelector('.card-title').innerText.toLowerCase();
-                // If the title includes the search value, display the card, otherwise hide it
-                if (title.includes(searchValue)) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    </script>
+    <script src="{% static 'js/list_products.js' %}"></script>
 {% endblock %}

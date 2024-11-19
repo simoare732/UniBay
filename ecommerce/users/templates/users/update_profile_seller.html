@@ -16,7 +16,7 @@
                             {% csrf_token %}
                             {{ form.as_p }}
                             <button type="submit" class="btn btn-light">Modifica</button>
-                            <a href="{% url 'users:profile_seller' object.pk %}" class="btn btn-secondary">Profilo</a>
+                            <a href="{% url 'users:profile_seller' object.pk %}" class="btn btn-secondary">Annulla</a>
                         </form>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
 from django.shortcuts import reverse, get_object_or_404, redirect
 from django.views.generic import CreateView, ListView
 from .models import Question, Answer
@@ -41,6 +42,14 @@ def add_answer(request, question_id):
         text = request.POST.get("text")
         if request.user.is_seller and request.user.seller == question.product.seller:
             ap = True
+            msg = f"Il venditore ha risposto alla tua domanda riguardante il prodotto {question.product.title}"
+            send_mail(
+                'UniBay: Risposta alla tua domanda',
+                msg,
+                'simoaresta3@gmail.com',
+                [question.reg_user.user.email],
+                fail_silently=False,
+            )
         else:
             ap = False
         if text:
@@ -75,4 +84,12 @@ class question_list_view(seller_general_mixin, ListView):
 def approve_answer(request, answer_pk):
     answer = get_object_or_404(Answer, pk=answer_pk)
     answer.approve()
+    msg = f"L'utente {answer.user.username} ha risposto alla tua domanda riguardante il prodotto {answer.question.product.title}"
+    send_mail(
+        'UniBay: Risposta alla tua domanda',
+        msg,
+        'simoaresta3@gmail.com',
+        [answer.question.reg_user.user.email],
+        fail_silently=False,
+    )
     return redirect("questions:list_questions", pk=answer.question.product.pk)

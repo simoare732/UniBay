@@ -1,7 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, UpdateView
-from django.contrib.auth import login
 from .forms import *
 from listings.models import Category
 from .mixins import *
@@ -22,9 +21,13 @@ class User_Signup_View(CreateView):
 
     def form_valid(self , form):
         user = form.save()
-        login(self.request, user)
-        # The reverse is useful to generate the URL of login page
-        return redirect(reverse('users:login'))
+        return redirect('users:login')
+
+    def dispatch(self, request, *args, **kwargs):
+        # If the user is authenticated, redirect him to the home page
+        if request.user.is_authenticated:
+            return redirect('pages:home_page')
+        return super().dispatch(request, *args, **kwargs)
 
 
 class Seller_Signup_View(CreateView):
@@ -39,11 +42,17 @@ class Seller_Signup_View(CreateView):
 
     def form_valid(self , form):
         user = form.save()
-        login(self.request, user)
-        return redirect(reverse('users:login'))
+        return redirect('users:login')
+
+    def dispatch(self, request, *args, **kwargs):
+        # If the user is authenticated, redirect him to the home page
+        if request.user.is_authenticated:
+            return redirect('pages:home_page')
+        return super().dispatch(request, *args, **kwargs)
 
 
-# to show information of a user/seller
+
+# Page to show information of a user/seller/admin
 class detail_profile_user(reguser_required_mixin, DetailView):
     model = Registered_User
     template_name = 'users/profile_user.html'

@@ -9,9 +9,9 @@ def list_products(request):
     categories = Category.objects.all()
     category = request.GET.get('category', '')
     query = request.GET.get('q', '')
-    sort_by = request.GET.get('sort', 'default')  # Valore predefinito per l'ordinamento
+    sort_by = request.GET.get('sort', 'default')
 
-    # Filtra i prodotti in base alla categoria e alla query di ricerca
+    # Filter products based on the query and category
     products = Product.objects.all()
 
     if category:
@@ -20,17 +20,17 @@ def list_products(request):
     if query:
         products = products.filter(title__icontains=query)
 
-    # Gestione dell'ordinamento
-    if sort_by == 'price-asc':  # Ordina per prezzo crescente
+    # Manage the sorting of products
+    if sort_by == 'price-asc':  # Order by price ascending
         products = products.order_by('price')
-    elif sort_by == 'price-desc':  # Ordina per prezzo decrescente
+    elif sort_by == 'price-desc':  # Order by price descending
         products = products.order_by('-price')
-    elif sort_by == 'most-sold':  # Ordina per il numero di prodotti venduti
+    elif sort_by == 'most-sold':  # Order by most sold
         products = products.order_by('-sold')
     else:
-        products = products.order_by('-date')  # Ordinamento predefinito (per data)
+        products = products.order_by('-date')  # Default order (by date)
 
-    # Restituisci i risultati filtrati tramite richiesta AJAX o renderizza la pagina completa
+    # Return the products as a partial view if it's an AJAX request
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return render(request, 'pages/list_products_partial.html', {'products': products, 'categories': categories})
 

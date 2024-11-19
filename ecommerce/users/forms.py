@@ -118,7 +118,7 @@ class seller_update_form(forms.ModelForm):
 
     class Meta:
         model = Seller
-        fields = ['username', 'email', 'PIVA', 'phone']  # i campi che desideri modificare
+        fields = ['username', 'email', 'PIVA', 'phone']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -127,7 +127,7 @@ class seller_update_form(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        # Aggiorna l'username dell'utente collegato
+        # Update the username of the connected user
         instance.user.username = self.cleaned_data['username']
         instance.user.email = self.cleaned_data['email']
         if commit:
@@ -153,7 +153,7 @@ class user_update_form(forms.ModelForm):
 
     class Meta:
         model = Registered_User
-        fields = ['username', 'email', 'phone']  # i campi che desideri modificare
+        fields = ['username', 'email', 'phone']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -162,7 +162,7 @@ class user_update_form(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        # Aggiorna l'username dell'utente collegato
+        # Update the username of the connected user
         instance.user.username = self.cleaned_data['username']
         instance.user.email = self.cleaned_data['email']
         if commit:
@@ -182,15 +182,15 @@ class admin_update_form(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email']  # i campi che desideri modificare
+        fields = ['username', 'email']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].initial = self.instance.username  # imposta il valore iniziale
+        self.fields['username'].initial = self.instance.username  # set the initial value of the field
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        # Aggiorna l'username dell'utente collegato
+        # Update the username of the connected user
         instance.username = self.cleaned_data['username']
         instance.user.email = self.cleaned_data['email']
         if commit:

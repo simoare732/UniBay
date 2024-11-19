@@ -1,8 +1,6 @@
-from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import redirect
-from django.contrib import messages
 
 class reguser_required_mixin(LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):

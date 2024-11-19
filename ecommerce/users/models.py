@@ -23,7 +23,7 @@ class Seller(models.Model):
         return self.user.username
 
     def delete(self, *args, **kwargs):
-        # Elimina tutti i prodotti associati
+        # Delete all products of the seller
         for product in self.products.all():
             product.delete()
         super().delete(*args, **kwargs)

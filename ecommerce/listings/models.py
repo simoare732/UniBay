@@ -7,11 +7,11 @@ from reviews.models import Review
 
 # Define path to save images of products
 def product_image_path(instance, filename):
-    # Assicurati che il prodotto sia stato salvato e abbia un 'pk'
+    # Ensure that the instance has a pk
     if not instance.pk:
-        instance.save()  # Salva l'istanza per ottenere il pk
+        instance.save()  # Save the instance to obtain a pk
 
-    # Genera il percorso per l'immagine
+    # Generate the path to save the image
     return os.path.join(f'listings/imgs/{instance.pk}', filename)
 
 class Product(models.Model):
@@ -58,7 +58,7 @@ class Product(models.Model):
 
         # Verify that the folder exists and if there is, delete it
         if os.path.exists(product_folder) and os.path.isdir(product_folder):
-            shutil.rmtree(product_folder)  # Rimuove la cartella e tutto il suo contenuto
+            shutil.rmtree(product_folder)  # Remove the folder and its content
 
         # Delete the product from the database
         super().delete(*args, **kwargs)

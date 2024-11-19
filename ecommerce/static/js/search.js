@@ -7,22 +7,22 @@ function setFilter(filter) {
         let sortValue;
         switch (filter) {
             case 'Prezzo basso-alto':
-                sortValue = 'price-asc';  // Usa 'price-asc' invece di 'price_asc'
+                sortValue = 'price-asc';
                 break;
             case 'Prezzo alto-basso':
-                sortValue = 'price-desc';  // Usa 'price-desc' invece di 'price_desc'
+                sortValue = 'price-desc';
                 break;
             case 'Più venduti':
-                sortValue = 'most-sold';   // Usa 'most-sold' invece di 'most_sold'
+                sortValue = 'most-sold';
                 break;
             default:
-                sortValue = 'default';     // Valore di default
+                sortValue = 'default';
         }
 
         const query = new URLSearchParams(window.location.search);
         query.set('sort', sortValue);
 
-        // Richiesta AJAX per aggiornare i risultati
+        // Ajax request to update the products
         fetch(`${window.location.pathname}?` + query.toString(), {
             headers: {
                 'x-requested-with': 'XMLHttpRequest'
@@ -30,7 +30,7 @@ function setFilter(filter) {
         })
         .then(response => response.text())
         .then(html => {
-            // Aggiorna i risultati nella pagina
+            // Update results in the page
             document.getElementById('results').innerHTML = html;
         })
         .catch(error => console.error('Errore durante il caricamento dei prodotti ordinati:', error));

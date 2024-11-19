@@ -47,9 +47,9 @@
             <div class="col-md-4 d-flex flex-column align-items-start ms-4">
                 <h1 class="mb-2">{{ product.title }}</h1>
 
-                <div class="d-flex align-items-center"> <!-- Flexbox per allineamento -->
+                <div class="d-flex align-items-center">
                     <!-- Stelle -->
-                    <div class="d-flex align-items-center me-2"> <!-- Flexbox per le stelle -->
+                    <div class="d-flex align-items-center me-2">
                         {% with product.average_rating as avg_rating %}
                             {% for i in "12345" %}
                                 {% if avg_rating >= forloop.counter %}
@@ -108,7 +108,8 @@
 
             <div class="description w-100 d-flex justify-content-between align-items-center p-2">
                     <h3>Descrizione</h3>
-                <!-- If user is authenticated, the user is a registered user and he didn't write a report to that seller, he sees the link -->
+                <!-- If user is authenticated, the user is a registered user and he didn't write a report to that seller,
+                he sees the link -->
                 {% if user.is_authenticated and user.is_registered_user and report == None%}
                     <a href="{% url 'report:create_report' product.pk %}" class="text-muted">Segnala venditore</a>
                 {% endif %}
@@ -232,7 +233,7 @@
                                         Rispondi
                                     </button>
                                 </div>
-                                <!-- Modulo per rispondere -->
+                                <!-- Module to reply -->
                                 <div id="reply-form-{{ q.id }}" class="reply-form d-none">
                                     <form method="POST" action="{% url 'questions:add_answer' q.id %}">
                                         {% csrf_token %}
