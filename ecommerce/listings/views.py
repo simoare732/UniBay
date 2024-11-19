@@ -101,6 +101,16 @@ class detail_product_view(DetailView):
             self.request.session['checkout_token'] = token_urlsafe(16)
         context['checkout_token'] = self.request.session['checkout_token']
 
+
+        # Obtain questions and if the user has answered to them
+        questions = self.object.questions.all()
+
+        answered_map = {}
+        for q in questions:
+            answered_map[q.pk] = q.answer.filter(user=self.request.user).exists()
+
+        context['answered_map'] = answered_map
+
         return context
 
 class update_product_view(product_owner_mixin, UpdateView):

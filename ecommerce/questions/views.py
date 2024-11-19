@@ -1,14 +1,19 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import reverse, get_object_or_404, redirect
 from django.views.generic import CreateView, ListView
 from .models import Question, Answer
 from listings.models import Product, Category
 from .forms import question_create_form
+from django.views.decorators.http import require_POST
+from users.mixins import seller_general_mixin
 
 
-class create_question_view(CreateView):
+class create_question_view(LoginRequiredMixin, CreateView):
     model = Question
     template_name = 'questions/create_question.html'
     form_class = question_create_form
+
+    login_url = 'users:login'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -28,6 +33,7 @@ class create_question_view(CreateView):
         return reverse('listings:detail_product', kwargs={'pk': self.kwargs['pk']})
 
 
+@require_POST
 def add_answer(request, question_id):
     question = get_object_or_404(Question, id=question_id)
 
@@ -50,7 +56,7 @@ def add_answer(request, question_id):
 
 
 
-class question_list_view(ListView):
+class question_list_view(seller_general_mixin, ListView):
     model = Question
     template_name = 'questions/question_list.html'
 
@@ -65,6 +71,7 @@ class question_list_view(ListView):
         return context
 
 
+@require_POST
 def approve_answer(request, answer_pk):
     answer = get_object_or_404(Answer, pk=answer_pk)
     answer.approve()

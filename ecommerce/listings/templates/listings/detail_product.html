@@ -1,5 +1,6 @@
 {% extends 'base_pages.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %} Product detail {% endblock %}
 
@@ -209,13 +210,21 @@
                 <p class="text-muted">{{ product.questions.count }} Domande</p>
                 {% for q in product.questions.all %}
                     <div class="question mb-3">
-                        <p class="fw-bold">{{ q.reg_user.user.username }}</p>
-                        <p class="my-3">Domanda: {{ q.text }}</p>
+                        <p class="my-1">Domanda</p>
+                        <div class="d-flex gap-2">
+                            <p class="fw-bold">{{ q.reg_user.user.username }}:</p>
+                            <p>{{ q.text }}</p>
+                        </div>
 
                         {% if q.is_answered %}
-                            <p>Risposta: {{ q.get_answer.text }}</p>
+                            <p class="mb-1">Risposta</p>
+                            <div class="d-flex gap-2">
+                                <p class="fw-bold">{{ q.get_answer.user.username }}:</p>
+                                <p>{{ q.get_answer.text }}</p>
+                            </div>
+
                         {% else %}
-                            {% if user.is_authenticated and q.reg_user.user != user %}
+                            {% if user.is_authenticated and q.reg_user.user != user and not answered_map|get_item:q.pk %}
                                 <div id="reply-section-{{ q.id }}">
                                     <button
                                             class="btn btn-outline-secondary btn-sm reply-button"
