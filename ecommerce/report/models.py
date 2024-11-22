@@ -40,4 +40,4 @@ class Strike(models.Model):
     date = models.DateTimeField(auto_now_add=True, editable=False, null=True)
 
     def __str__(self):
-        return f"Strike for {self.seller.user.username}"
+        return f"Strike per {self.seller.user.username}"

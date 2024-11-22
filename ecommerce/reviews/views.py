@@ -1,5 +1,3 @@
-from django.http import Http404
-from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 
@@ -21,9 +19,9 @@ class create_review_view(reguser_general_mixin, CreateView):
         return context
 
     def form_valid(self, form):
-        product_id = self.kwargs.get('pk')  # Ottieni l'ID del prodotto dalla URL
-        form.instance.product = Product.objects.get(pk=product_id)  # Associa la recensione al prodotto
-        form.instance.reg_user = self.request.user.registered_user  # Associa la recensione all'utente loggato
+        product_id = self.kwargs.get('pk')
+        form.instance.product = Product.objects.get(pk=product_id)
+        form.instance.reg_user = self.request.user.registered_user
         return super().form_valid(form)
 
 
@@ -98,7 +96,6 @@ class create_seller_review_view(reguser_general_mixin, CreateView):
         context['categories'] = Category.objects.all()
         context['seller'] = Seller.objects.get(pk=self.kwargs['pk'])
 
-        # Recupera il product_pk dai query parameters
         product_pk = self.request.GET.get('product_pk')
         if product_pk:
             context['product'] = product_pk
@@ -108,10 +105,10 @@ class create_seller_review_view(reguser_general_mixin, CreateView):
         return context
 
     def form_valid(self, form):
-        seller_id = self.kwargs.get('pk')  # Ottieni l'ID del venditore dalla URL
-        seller = Seller.objects.get(pk=seller_id)  # Ottieni l'istanza del venditore
-        form.instance.seller = seller  # Associa l'oggetto User del venditore alla recensione
-        form.instance.reg_user = self.request.user.registered_user  # Associa la recensione all'utente loggato
+        seller_id = self.kwargs.get('pk')
+        seller = Seller.objects.get(pk=seller_id)
+        form.instance.seller = seller
+        form.instance.reg_user = self.request.user.registered_user
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -140,7 +137,6 @@ class update_seller_review_view(review_owner_mixin ,UpdateView):
         else:
             context['succ'] = None
 
-        # Recupera il product_pk dai query parameters
         product_pk = self.request.GET.get('product_pk')
         if product_pk:
             context['product'] = product_pk
@@ -169,7 +165,6 @@ class delete_seller_review_view(review_owner_mixin ,DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Recupera il product_pk dai query parameters
         product_pk = self.request.GET.get('product_pk')
         if product_pk:
             context['product'] = product_pk
@@ -197,10 +192,11 @@ class delete_seller_review_view(review_owner_mixin ,DeleteView):
             return reverse('pages:home_page')
 
 
+# List of reviews for a seller
 class list_seller_review_view(ListView):
     model = Seller_Review
     template_name = 'reviews/list_seller_review.html'
-    paginate_by = 10
+    paginate_by = 5
 
     def get_queryset(self):
         seller_pk = self.kwargs.get('pk')
@@ -226,10 +222,11 @@ class list_seller_review_view(ListView):
         return context
 
 
+# List of reviews for products made by a user
 class list_user_review_view(reguser_general_mixin ,ListView):
     model = Review
     template_name = 'reviews/list_user_review.html'
-    paginate_by = 10
+    paginate_by = 5
 
     def get_queryset(self):
         return Review.objects.filter(reg_user=self.request.user.registered_user).order_by('-date')
@@ -243,11 +240,12 @@ class list_user_review_view(reguser_general_mixin ,ListView):
         return context
 
 
+
+# List of reviews for sellers made by a user
 class list_user_seller_review_view(reguser_general_mixin ,ListView):
     model = Seller_Review
     template_name = 'reviews/list_user_seller_review.html'
-    #ordering = ['-date']
-    paginate_by = 10
+    paginate_by = 5
 
     def get_queryset(self):
         return Seller_Review.objects.filter(reg_user=self.request.user.registered_user).order_by('-date')

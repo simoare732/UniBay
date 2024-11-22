@@ -143,7 +143,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 AUTH_USER_MODEL = 'users.User'
 
-LOGIN_REDIRECT_URL = "/?login=ok"  # redireziona alla home
+LOGIN_REDIRECT_URL = "/?login=ok"
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

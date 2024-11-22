@@ -1,11 +1,13 @@
+{% load custom_filters %}
+
 <nav aria-label="Page navigation">
     <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page=1">Inizio</a>
+                <a class="page-link" href="?page=1&{{ request.GET|exclude_page }}">Inizio</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Precedente</a>
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ request.GET|exclude_page }}">Precedente</a>
             </li>
         {% else %}
             <li class="page-item disabled">
@@ -22,10 +24,10 @@
 
         {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Successiva</a>
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ request.GET|exclude_page }}">Successiva</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Fine</a>
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&{{ request.GET|exclude_page }}">Fine</a>
             </li>
         {% else %}
             <li class="page-item disabled">
@@ -37,6 +39,7 @@
         {% endif %}
     </ul>
 </nav>
+
 
 
 <style>

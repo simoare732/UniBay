@@ -13,7 +13,7 @@ stars.forEach(star => {
         // Update the hidden input value
         ratingInput.value = rating;
         // Save the current rating
-        currentRating = rating; // Memorizza la valutazione corrente
+        currentRating = rating;
 
         // Change the visual state of the stars
         updateStars(rating);

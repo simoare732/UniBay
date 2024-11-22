@@ -44,7 +44,6 @@ class report_list_view(admin_required_mixin, ListView):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
 
-        #context['reports'] = Report.objects.all()
         return context
 
 
@@ -76,8 +75,8 @@ class strike_create_view(admin_required_mixin, CreateView):
         if seller.strikes.count() >= 3:
             # Email the seller
             send_mail(
-                'Account sospeso',
-                'Il tuo account è stato sospeso a causa di tre strike ricevuti.',
+                'Account eliminato',
+                'Il tuo account è stato eliminato a causa di tre strike ricevuti.',
                 'simoaresta3@gmail.com',
                 [seller.user.email],
                 fail_silently=False,
@@ -86,10 +85,11 @@ class strike_create_view(admin_required_mixin, CreateView):
             # Delete the seller
             seller.user.delete()
         else:
+            msg = f'Hai ricevuto uno strike. Descrizione: {form.instance.description}'
             # Email the seller
             send_mail(
                 'Strike ricevuto',
-                f'Attenzione. Hai ricevuto uno strike.\nDescrizione: {form.instance.description}',
+                msg,
                 'simoaresta3@gmail.com',
                 [seller.user.email],
                 fail_silently=False,

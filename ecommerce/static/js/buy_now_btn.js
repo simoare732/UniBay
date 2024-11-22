@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return; // Block the execution of the function
         }
 
-        // Se tutto è ok, reindirizza alla pagina di checkout
+        // If the quantity is valid, redirect the user to the checkout page
         window.location.href = `${checkoutUrl}?product_id=${productId}&quantity=${selectedQuantity}&token=${token}`;
     });
 });

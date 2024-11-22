@@ -18,9 +18,7 @@ function toggleFavorite(productId) {
         // The request body is a JSON string containing the product ID
         body: JSON.stringify({ 'product_id': productId })
     })
-        // The response from the server is converted to JSON
-    .then(response => response.json())
-        // Manage the response. The heart icon is updated based on the server response
+         // Manage the response. The heart icon is updated based on the server response
     .then(data => {
         if (data.is_favorite) {
             heartIcon.classList.remove("far");

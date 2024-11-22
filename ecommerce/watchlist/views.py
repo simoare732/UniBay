@@ -1,5 +1,3 @@
-from ctypes.wintypes import POINT
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -26,11 +24,11 @@ def toggle_favorite(request, product_id):
     return JsonResponse({'is_favorite': is_favorite})
 
 
-@login_required(login_url='users:login')
+@require_POST
 def remove_favorite(request, favorite_id):
     try:
         favorite = Favourite.objects.get(id=favorite_id)
-        favorite.delete()  # Rimuovi l'elemento dai preferiti
+        favorite.delete()
         return JsonResponse({'success': True})
     except Favourite.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'not_favorite'}, status=400)
