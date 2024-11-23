@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     buyNowBtn.addEventListener('click', () => {
         const selectedQuantity = parseInt(quantityInput.value, 10);
 
-        // Controlla se la quantità è valida
+        // Check if the quantity is valid
         if (isNaN(selectedQuantity) || selectedQuantity < 1 || selectedQuantity > maxQuantity) {
             alert('Errore durante l\'indirizzamento');
             return; // Block the execution of the function

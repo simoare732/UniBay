@@ -39,7 +39,7 @@ def add_answer(request, question_id):
     question = get_object_or_404(Question, id=question_id)
 
     if request.method == "POST":
-        text = request.POST.get("text")
+        text = request.POST.get("text") # It can't be null
         if request.user.is_seller and request.user.seller == question.product.seller:
             ap = True
             msg = f"Il venditore ha risposto alla tua domanda riguardante il prodotto {question.product.title}"
@@ -52,13 +52,14 @@ def add_answer(request, question_id):
             )
         else:
             ap = False
-        if text:
-            Answer.objects.create(
-                question=question,
-                user=request.user,
-                text=text,
-                approved=ap  # If the user is the seller, the answer is automatically approved
-            )
+
+        Answer.objects.create(
+            question=question,
+            user=request.user,
+            text=text,
+            approved=ap  # If the user is the seller, the answer is automatically approved
+        )
+
     if "list" in request.GET:
         return redirect("questions:list_questions", pk=question.product.pk)
     return redirect("listings:detail_product", pk=question.product.pk)

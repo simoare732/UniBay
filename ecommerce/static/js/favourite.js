@@ -15,8 +15,6 @@ function toggleFavorite(productId) {
             'Content-Type': 'application/json',
             'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value // Aggiunge il CSRF token
         },
-        // The request body is a JSON string containing the product ID
-        body: JSON.stringify({ 'product_id': productId })
     })
          // Manage the response. The heart icon is updated based on the server response
     .then(data => {

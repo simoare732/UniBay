@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.views.generic import CreateView, DetailView, UpdateView
 from .forms import *
 from listings.models import Category
+from shopping.models import Cart
 from .mixins import *
 
 def home_signup(request):
@@ -21,6 +22,9 @@ class User_Signup_View(CreateView):
 
     def form_valid(self , form):
         user = form.save()
+
+        Cart.objects.create(user=user)
+
         return redirect('users:login')
 
     def dispatch(self, request, *args, **kwargs):
@@ -42,6 +46,9 @@ class Seller_Signup_View(CreateView):
 
     def form_valid(self , form):
         user = form.save()
+
+        Cart.objects.create(user=user)
+
         return redirect('users:login')
 
     def dispatch(self, request, *args, **kwargs):

@@ -15,6 +15,7 @@ function updateQuantity(itemPk, action){
             if(data.quantity == 0){
                 document.getElementById(`cart-item-${itemPk}`).remove();
                 document.getElementById(`hr-${itemPk}`).remove();
+                location.reload();
             }
             else{
                 document.getElementById(`quantity-${itemPk}`).innerText = data.quantity;
@@ -24,6 +25,7 @@ function updateQuantity(itemPk, action){
             document.getElementById('total-items').innerText = data.total_items;
             document.getElementById('total-price').innerText = `${parseFloat(data.total_price).toFixed(2).replace('.',',')}`;
             document.getElementById('total-price-summary').innerText = `${parseFloat(data.total_price).toFixed(2).replace('.',',')}`;
+
         }
     })
     .catch(error => console.error('Error:', error));
@@ -36,7 +38,7 @@ function addToCart(productId){
     fetch(`/shopping/add_to_cart/${productId}/`, {
         method: 'POST',
         headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // Assicurati di avere il CSRF token
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ quantity: quantity })
@@ -44,7 +46,7 @@ function addToCart(productId){
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert(data.message);  // Mostra un messaggio di successo
+            alert(data.message);
             document.getElementById(`small-quantity`).innerText = data.total_items;
         } else {
             alert('Errore durante l\'aggiunta al carrello');
@@ -60,7 +62,7 @@ function updateOrder(itemPk){
     fetch(`/shopping/update_order/${itemPk}/`, {
         method: 'POST',
         headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // Assicurati di avere il CSRF token
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
             'Content-Type': 'application/json',
         },
     })

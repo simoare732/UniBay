@@ -94,7 +94,7 @@ def update_cart_item_quantity(request, item_pk):
             return JsonResponse({
                 'quantity': 0,
                 'total_items': item.cart.total_items(),
-                'total_price': float(item.cart.total_price()),
+                'total_price': item.cart.total_price(),
             })
 
         # Return the new quantity and the total items and price in the cart
@@ -118,10 +118,11 @@ class checkout_view(LoginRequiredMixin, TemplateView):
     login_url = 'users:login'
 
     def dispatch(self, request, *args, **kwargs):
-        # Controllo del token
+        # Check if the token is present in the request and if it is the same as the one in the session
+        # The token is useful to force the user to go through the buttons on the site
         token = self.request.GET.get('token')
         if not token or token != self.request.session.get('checkout_token'):
-            return redirect('pages:home_page')  # Redirect per accesso non autorizzato
+            return redirect('pages:home_page')  #
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

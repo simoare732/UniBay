@@ -118,17 +118,7 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById("submit-button").addEventListener("click", function(event) {
-            // Verifica che il form sia valido prima di inviarlo
-            let form = document.getElementById("checkout-form");
-            if (form.checkValidity()) {
-                form.submit();  // Invia il form se valido
-            } else {
-                form.reportValidity();  // Mostra gli errori di validazione
-            }
-        });
-    </script>
+    <script src="{% static 'js/checkout.js' %}"></script>
 
 
     {% include 'footer.html' %}

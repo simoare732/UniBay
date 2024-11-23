@@ -39,7 +39,7 @@ class Cart_Item(models.Model):
         return self.quantity * self.product.price
 
 
-
+# This represents an order of a user
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, default='In progress')
@@ -49,7 +49,7 @@ class Order(models.Model):
     payment = models.ForeignKey('Payment', on_delete=models.CASCADE, null=True, blank=True, related_name='order')
 
     def __str__(self):
-        return f'Order of {self.user.username} - {self.pk}'
+        return f'Order of {self.user.username}, n° {self.pk}'
 
     def order_shipped(self):
         self.status = 'Shipped'
@@ -59,7 +59,7 @@ class Order(models.Model):
         self.status = 'Delivered'
         self.save()
 
-
+# This represents an item in an order
 class Order_Item(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     status = models.CharField(max_length=20, default='In progress')
@@ -68,7 +68,7 @@ class Order_Item(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f'{self.quantity} of {self.product.title}'
+        return f'{self.quantity} of {self.product.title} in order n° {self.order.pk}'
 
 
     def item_shipped(self):
@@ -102,7 +102,7 @@ class Order_Item(models.Model):
         self.save()
 
 
-
+# This represents the shipping information of an order
 class Shipping(models.Model):
     country = models.CharField(max_length=20, null=False)
     name = models.CharField(max_length=20, null=False)
@@ -116,7 +116,7 @@ class Shipping(models.Model):
         return f'Address of {self.name} {self.surname} in {self.city}'
 
 
-
+# This represents the payment information of an order
 class Payment(models.Model):
     # In a real application, we would use a more secure way to store credit card information
     card_number = models.CharField(max_length=16, null=False)
