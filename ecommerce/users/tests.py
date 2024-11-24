@@ -79,6 +79,8 @@ class ReguserSignupViewTests(TestCase):
         self.assertTrue(User.objects.get(username='testuser').is_registered_user)
 
 
+
+
 class SellerSignupViewTests(TestCase):
     def test_seller_signup_form(self):
         url = reverse('users:seller_signup')
@@ -106,4 +108,24 @@ class ProfileViewTests(TestCase):
         response = self.client.get(reverse('users:profile_seller'))
         self.assertRedirects(response, reverse('pages:home_page'))
 
+
+class UpdateProfileViewTests(TestCase):
+    def test_seller_profile_update(self):
+        user = User.objects.create_user(username="testuser", email="testuser@example.com", password="testpassword123", is_seller=True)
+        seller = Seller.objects.create(user=user, phone="0987654321", PIVA="IT123456789")
+
+        self.assertTrue(self.client.login(username="testuser", password="testpassword123"))
+        response = self.client.get(reverse('users:update_profile_seller', kwargs={'pk': seller.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/update_profile_seller.html')
+
+        data = {
+            'username':user.username,
+            'email': user.email,
+            'phone': '0987654321',
+            'PIVA': 'IT987654321'
+        }
+
+        response = self.client.post(reverse('users:update_profile_seller', kwargs={'pk': seller.pk}), data)
+        self.assertRedirects(response, reverse('users:profile_seller', kwargs={'pk': seller.pk}))
 

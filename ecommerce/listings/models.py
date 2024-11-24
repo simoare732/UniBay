@@ -46,11 +46,16 @@ class Product(models.Model):
             self.image3 = None
             self.image4 = None
             self.image5 = None
+            # To avoid saving two times pk, force_insert is set to None
+            kwargs.pop('force_insert', None)
             super().save(*args, **kwargs)
 
             #Then save images
             self.image1, self.image2, self.image3, self.image4, self.image5 = saved_images
-        super().save(*args, **kwargs)
+            super().save(*args, **kwargs)
+        else:
+            super().save(*args, **kwargs)
+
 
     def delete(self, *args, **kwargs):
         # Obtain the path of the folder containing the images of the product
@@ -67,7 +72,10 @@ class Product(models.Model):
         return self.title
 
     def decrease_quantity(self, n):
-        self.quantity -= n
+        if self.quantity - n < 0:
+            self.quantity = 0
+        else:
+            self.quantity -= n
         self.save()
 
     def increase_quantity(self, n):
@@ -79,7 +87,10 @@ class Product(models.Model):
         self.save()
 
     def decrease_sold(self, n):
-        self.sold -= n
+        if self.sold - n < 0:
+            self.sold = 0
+        else:
+            self.sold -= n
         self.save()
 
     def average_rating(self):

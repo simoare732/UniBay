@@ -1,5 +1,6 @@
 from secrets import token_urlsafe
 
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import CreateView, ListView, DeleteView, DetailView, UpdateView
 
