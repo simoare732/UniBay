@@ -219,7 +219,7 @@ class ProductViewTests(TestCase):
 
         response = self.client.post(reverse('listings:update_product', kwargs={'pk': self.product.pk}),
                                     updated_data)
-        #print(response.content)
+
         self.assertEqual(response.status_code, 302)
 
         self.product.refresh_from_db()
