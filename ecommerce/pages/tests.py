@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
+import os
 
 from listings.models import Product, Category
 from users.models import Seller, User
@@ -53,6 +54,12 @@ class TestViews(TestCase):
         self.product1.increase_sold(5)
         self.product2.increase_sold(8)
         self.product3.increase_sold(2)
+
+    def tearDown(self):
+        product_image_path = os.path.join(f'listings/imgs/{self.product1.pk}', 'test_image.jpg')
+        if os.path.exists(product_image_path):
+            os.remove(product_image_path)
+        super().tearDown()
 
     def test_order_products(self):
         response = self.client.get(reverse('pages:list_products'), {'sort': 'price-desc'})

@@ -47,6 +47,12 @@ class ProductModelTests(TestCase):
         )
         self.product.categories.add(self.category)
 
+    def tearDown(self):
+        product_image_path = os.path.join(f'listings/imgs/{self.product.pk}', 'test_image.jpg')
+        if os.path.exists(product_image_path):
+            os.remove(product_image_path)
+        super().tearDown()
+
     # Basically this test pass at the function a fake function shutil.rmtree. The product is eliminated using mock_rmtree
     # to avoid deleting folders during test. Then with assert_called_once, we check if the function has been called once with
     # path passed as argument.
@@ -109,6 +115,12 @@ class ProductValidationTests(TestCase):
 
         )
         self.product.categories.add(self.category)
+
+    def tearDown(self):
+        product_image_path = os.path.join(f'listings/imgs/{self.product.pk}', 'test_image.jpg')
+        if os.path.exists(product_image_path):
+            os.remove(product_image_path)
+        super().tearDown()
 
 
     def test_quantity_cannot_be_negative(self):
@@ -177,6 +189,12 @@ class ProductViewTests(TestCase):
             price=10.00,
             quantity=20,
         )
+
+    def tearDown(self):
+        product_image_path = os.path.join(f'listings/imgs/{self.product.pk}', 'test_image.jpg')
+        if os.path.exists(product_image_path):
+            os.remove(product_image_path)
+        super().tearDown()
 
     def test_list_products_view(self):
         self.client.login(username='testuser', password='testpassword123')
