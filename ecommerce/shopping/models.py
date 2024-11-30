@@ -59,6 +59,10 @@ class Order(models.Model):
         self.status = 'Delivered'
         self.save()
 
+    def order_paid(self):
+        self.status = 'Paid'
+        self.save()
+
 # This represents an item in an order
 class Order_Item(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
@@ -73,6 +77,7 @@ class Order_Item(models.Model):
 
     def item_shipped(self):
         self.status = 'Shipped'
+        self.save()
 
         cart_sent = True
 

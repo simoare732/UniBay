@@ -115,7 +115,6 @@ def order_success(request):
 class checkout_view(LoginRequiredMixin, TemplateView):
     template_name = 'shopping/checkout.html'
 
-    login_url = 'users:login'
 
     def dispatch(self, request, *args, **kwargs):
         # Check if the token is present in the request and if it is the same as the one in the session
@@ -153,7 +152,7 @@ class checkout_view(LoginRequiredMixin, TemplateView):
 
         return context
 
-
+    # Post is useful to create the order. Method form_valid is invalid because we don't have a form.
     def post(self, request, *args, **kwargs):
         shipping_form_instance = shipping_form(request.POST)
         payment_form_instance = payment_form(request.POST)
@@ -183,8 +182,8 @@ class checkout_view(LoginRequiredMixin, TemplateView):
 
                 if product_id:
                     product = get_object_or_404(Product, pk=product_id)
-                    items = [{'product': product, 'quantity': quantity, 'total_price': product.price}]
-                    total_price = product.price
+                    total_price = product.price * quantity
+                    items = [{'product': product, 'quantity': quantity, 'total_price': total_price}]
 
 
                 else:
@@ -197,7 +196,6 @@ class checkout_view(LoginRequiredMixin, TemplateView):
 
                 order = Order.objects.create(
                     user=request.user,
-                    status='Paid',
                     total_price=total_price,
                     shipping=sh,
                     payment=pay,
@@ -216,6 +214,7 @@ class checkout_view(LoginRequiredMixin, TemplateView):
                         quantity=item['quantity'],
                         price=item['total_price'],
                     )
+                order.order_paid()
 
                 msg = f"L'utente {request.user.username} ha acquistato dei prodotti da te"
                 for s in sellers:
@@ -247,7 +246,7 @@ class order_list_view(LoginRequiredMixin, ListView):
         queryset = Order.objects.filter(user=self.request.user).order_by('-date')
         # Remember: timedelta return the duration of the parameter. timedelta(days=30) return the duration of 30 days
         # now() returns the timestamp of the current time. So now() - timedelta(days=30) returns the timestamp of 30 days ago
-        time_filter = self.request.GET.get('filter', 'all')  # Valore predefinito: tutti gli ordini
+        time_filter = self.request.GET.get('filter', 'all')  # Default value is 'all'
         if time_filter == 'last_30_days':
             start_date = now() - timedelta(days=30)
             queryset = queryset.filter(date__gte=start_date)
