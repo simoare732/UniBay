@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import redirect
+from listings.models import Product
 
 class reguser_required_mixin(LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -78,3 +79,21 @@ class product_owner_mixin(LoginRequiredMixin):
             return redirect('pages:home_page')
         return super().dispatch(request, *args, **kwargs)
 
+
+class question_owner_mixin(LoginRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+        # Check if the user is authenticated and is a registered user
+        if not request.user.is_authenticated or not request.user.is_seller:
+            return redirect('pages:home_page')
+
+        product_pk = self.kwargs.get('pk')
+        try:
+            product = Product.objects.get(pk=product_pk)
+        except Product.DoesNotExist:
+            return redirect('pages:home_page')
+
+        # Check if the user is the owner of the product
+        if product.seller != request.user.seller:
+            return redirect('pages:home_page')
+
+        return super().dispatch(request, *args, **kwargs)

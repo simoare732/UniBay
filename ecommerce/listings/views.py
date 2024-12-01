@@ -106,7 +106,12 @@ class detail_product_view(DetailView):
 
         answered_map = {}
         for q in questions:
-            answered_map[q.pk] = q.answer.filter(user=self.request.user).exists()
+            # The map is used to check if the user has answered to the question. If the user is not authenticated,
+            # we suppose that he has not answered
+            if self.request.user.is_authenticated:
+                answered_map[q.pk] = q.answer.filter(user=self.request.user).exists()
+            else:
+                answered_map[q.pk] = False
 
         context['answered_map'] = answered_map
 

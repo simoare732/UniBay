@@ -6,7 +6,7 @@ from .models import Question, Answer
 from listings.models import Product, Category
 from .forms import question_create_form
 from django.views.decorators.http import require_POST
-from users.mixins import seller_general_mixin
+from users.mixins import question_owner_mixin
 
 
 class create_question_view(LoginRequiredMixin, CreateView):
@@ -66,7 +66,7 @@ def add_answer(request, question_id):
 
 
 
-class question_list_view(seller_general_mixin, ListView):
+class question_list_view(question_owner_mixin, ListView):
     model = Question
     template_name = 'questions/question_list.html'
 
