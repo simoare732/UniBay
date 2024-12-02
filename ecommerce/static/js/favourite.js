@@ -5,7 +5,7 @@ function switchImage(url) {
 
 function toggleFavorite(productId) {
     // This take the heart icon element
-    const heartIcon = document.getElementById('heart-icon');
+    const heartIcon = document.getElementById(`heart-icon`);
 
     // Send a POST request to the server. The URL is built using the productId taken as parameter
     fetch(`/watchlist/toggle_favorite/${productId}/`, {
@@ -16,7 +16,9 @@ function toggleFavorite(productId) {
             'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value // Aggiunge il CSRF token
         },
     })
-         // Manage the response. The heart icon is updated based on the server response
+
+    .then(response => response.json())
+        // Manage the response. The heart icon is updated based on the server response
     .then(data => {
         if (data.is_favorite) {
             heartIcon.classList.remove("far");
