@@ -26,8 +26,12 @@ class Answer(models.Model):
     approved = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True, null=False)
 
+    class Meta:
+        unique_together = ['question', 'user']
+
     def __str__(self):
         return f"Answer to question from {self.question.reg_user.user.username} about {self.question.product.title}"
+
 
 
     def approve(self):
