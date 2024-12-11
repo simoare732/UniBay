@@ -50,4 +50,7 @@ In alternativa ai vari comandi è possibile installare tutte le librerie necessa
 ```powershell
 pip install -r requirements.txt
 ```
-
+All'interno della cartella principale è presente un file sql.txt che contiene del codice sql
+utile a inserire delle categorie di default all'interno del database. Quindi se si vuole ricreare
+un database da 0, copiare il contenuto di questo file e incollarlo all'interno in una query console del
+database.
