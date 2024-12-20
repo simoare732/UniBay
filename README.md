@@ -52,3 +52,7 @@ pip install -r requirements.txt
 ```
 Inside the main folder, there is a file called sql.txt that contains SQL code useful for inserting default categories into the database. 
 If you want to recreate the database from scratch, copy the content of this file and paste it into a query console of the database.
+
+# Made by
+Made by simoare732
+Date: 12/20/2024 mm-dd-yyyy
