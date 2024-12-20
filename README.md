@@ -1,5 +1,5 @@
 # E-commerce with Django
-Sito web ebay-like per vendere e comprare prodotti
+An eBay-like website for buying and selling products.
 
 # Requirments
 * Python 3.10 or higher
@@ -7,27 +7,27 @@ Sito web ebay-like per vendere e comprare prodotti
 ```powershell
 pip3 install pipenv
 ```
-Si crea un ambiente virtuale tramite il comando e si apre la subshell 
+A virtual environment is created using the following command, and the subshell is opened:
 ```powershell
 pipenv install django
 pipenv shell
 ```
-E' utile infatti creare un ambiente virtuale per mantenere il progetto isolato 
+Creating a virtual environment is useful to keep the project isolated.
 
-Si cloni ora il progetto 
+Now, clone the project:
 ```powershell
 git clone https://github.com/simoare732/ecommerce_django.git
 ```
 
-Ora all'interno di questo ambiente si installa l'applicazione crispy-forms e bootstrap5, utili per migliorare l'estetica
-generale dell'applicazione.
+Within this environment, install the crispy-forms and bootstrap5 applications, 
+which are helpful for enhancing the overall aesthetics of the application:
 ```powershell
 pip install django-crispy-forms
 pip install crispy-bootstrap5
 ```
-Per poterle utilizzare è necessario aggiungere crispy_forms e bootstrap5 alle INSTALLED_APPS nel file settings.py.
+To use them, you need to add crispy_forms and bootstrap5 to INSTALLED_APPS in the settings.py file.
 
-Successivamente è necessario aggiungere le seguenti righe nel file settings.py
+Next, add the following lines to the settings.py file:
 ```python
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
@@ -35,22 +35,20 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 ```
 
 
-Per supportare le immagini che il sito utilizzera si installa pillow
+To support the images that the site will use, install the pillow library:
 ```powershell
 pip install pillow
 ```
-Per utilizzare questa libreria è sufficiente aggiungerla dove necessario con la seguente riga
+To use this library, simply import it where necessary with the following line:
 ```python
 from PIL import Image
 ```
 
-Chiaramente all'interno dell'applicazione è già tutto predisposto per l'utilizzo di queste librerie.
+Of course, the application is already configured to use these libraries.
 
-In alternativa ai vari comandi è possibile installare tutte le librerie necessarie tramite il comando
+As an alternative to the individual commands, you can install all the required libraries using the command:
 ```powershell
 pip install -r requirements.txt
 ```
-All'interno della cartella principale è presente un file sql.txt che contiene del codice sql
-utile a inserire delle categorie di default all'interno del database. Quindi se si vuole ricreare
-un database da 0, copiare il contenuto di questo file e incollarlo all'interno in una query console del
-database.
+Inside the main folder, there is a file called sql.txt that contains SQL code useful for inserting default categories into the database. 
+If you want to recreate the database from scratch, copy the content of this file and paste it into a query console of the database.
