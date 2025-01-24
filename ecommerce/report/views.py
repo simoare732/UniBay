@@ -90,7 +90,7 @@ class strike_create_view(admin_required_mixin, CreateView):
             send_mail(
                 'Strike ricevuto',
                 msg,
-                'simoaresta3@gmail.com',
+                'admin@admin.com',
                 [seller.user.email],
                 fail_silently=False,
             )
