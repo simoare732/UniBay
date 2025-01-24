@@ -77,7 +77,7 @@ class strike_create_view(admin_required_mixin, CreateView):
             send_mail(
                 'Account eliminato',
                 'Il tuo account è stato eliminato a causa di tre strike ricevuti.',
-                'simoaresta3@gmail.com',
+                'admin@admin.com',
                 [seller.user.email],
                 fail_silently=False,
             )
