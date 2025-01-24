@@ -46,7 +46,7 @@ def add_answer(request, question_id):
             send_mail(
                 'UniBay: Risposta alla tua domanda',
                 msg,
-                'simoaresta3@gmail.com',
+                'admin@admin.com',
                 [question.reg_user.user.email],
                 fail_silently=False,
             )
