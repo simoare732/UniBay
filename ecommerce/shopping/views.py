@@ -221,7 +221,7 @@ class checkout_view(LoginRequiredMixin, TemplateView):
                     send_mail(
                         'UniBay: Acquisto prodotti',
                         msg,
-                        'simoaresta3@gmail.com',
+                        'admin@admin.com',
                         [s.user.email],
                         fail_silently=False,
                     )
