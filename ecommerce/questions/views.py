@@ -89,7 +89,7 @@ def approve_answer(request, answer_pk):
     send_mail(
         'UniBay: Risposta alla tua domanda',
         msg,
-        'simoaresta3@gmail.com',
+        'admin@admin.com',
         [answer.question.reg_user.user.email],
         fail_silently=False,
     )
